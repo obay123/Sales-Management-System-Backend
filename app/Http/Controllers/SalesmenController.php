@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesmenRequests\StoreSalesmenRequest;
-use App\Http\Requests\UpdateSalesmenRequest;
+use App\Http\Requests\SalesmenRequests\UpdateSalesmenRequest;
 use App\Models\Salesmen;
 use Illuminate\Http\Request;
 

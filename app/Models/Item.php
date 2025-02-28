@@ -10,5 +10,12 @@ class Item extends Model
     protected $table = 'items';
     protected $primaryKey = 'code';
     public $incrementing = false;
+
+    public function invoices()
+    {
+        return $this->belongsToMany(Invoice::class, 'invoice_item')
+                    ->withPivot('quantity', 'unit_price', 'line_total');
+    }
+
 }
     
