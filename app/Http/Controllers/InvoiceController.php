@@ -18,23 +18,27 @@ class InvoiceController extends Controller
     // Create a new invoice
     public function store(StoreInvoiceRequest $request)
     {
+        $validated = $request->validated();
         $totalQuantity = 0;
-        $totalPrice    = 0;
-        foreach ($request->validated()['items'] as $item) {
+        $totalPrice = 0;
+        
+        foreach ($validated['items'] as $item) {
             $totalQuantity += $item['quantity'];
-            $totalPrice    += $item['quantity'] * $item['unit_price'];
+            $totalPrice += $item['quantity'] * $item['unit_price'];
         }
+        
         $invoice = Invoice::create([
-            'customer_id'    => $request['customer_id'],
-            'date'           => $request['date'] ?? now(),
+            'customer_id' => $validated['customer_id'],
+            'date' => $validated['date'] ?? now(),
             'total_quantity' => $totalQuantity,
-            'total_price'    => $totalPrice
+            'total_price' => $totalPrice,
         ]);
-        foreach ($request['items'] as $item) {
-            $invoice->items()->attach($item['item_id'], [
-                'quantity'   => $item['quantity'],
+
+        foreach ($validated['items'] as $item) {
+            $invoice->items()->attach($item['item_code'], [
+                'quantity' => $item['quantity'],
                 'unit_price' => $item['unit_price'],
-                'line_total' => $item['quantity'] * $item['unit_price']
+                'line_total' => $item['quantity'] * $item['unit_price'],
             ]);
         }
         return response()->json($invoice->load('items'), 201);
