@@ -11,41 +11,41 @@ class SalesmenController extends Controller
 {
     public function index()
     {
-        $salesmen = Salesmen::all();
-        return response()->json($salesmen,200);
-    }
-// 
-    public function store(StoreSalesmenRequest $request)
-    {
-       $data = $request->validated();
-       $salesman  = Salesmen::create($data);
-       return response()->json($salesman,200);
-    }
-// 
-    public function show($salesmen)
-    {
-        $salesman = Salesmen::findOrFail($salesmen);
-        return response()->json($salesman,200);
+        $salesmen = Salesmen::paginate(10); 
+        return response()->json($salesmen, 200);
     }
 
-// 
-    public function update(UpdateSalesmenRequest $request,  $salesmen)
+    public function store(StoreSalesmenRequest $request)
     {
-        $salesman  = Salesmen::findOrFail($salesmen);
+        $salesman = Salesmen::create($request->validated());
+        return response()->json($salesman, 201);
+    }
+
+    public function show(Salesmen $salesman) 
+    {
+        return response()->json($salesman, 200);
+    }
+
+    public function update(UpdateSalesmenRequest $request, Salesmen $salesman) 
+    {
         $salesman->update($request->validated());
-        return response()->json($salesman,200);
+        return response()->json($salesman, 200);
     }
-// 
-    public function destroy($code)
+
+    public function destroy(Salesmen $salesman) 
     {
-        $salesman = Salesmen::findOrFail($code);
         $salesman->delete();
-        return response()->json(["message" => "Deleted successfully"],204);
+        return response()->json(null, 204); 
     }
-// 
-    public function GetCustomers($code)
+
+    public function getCustomers(Salesmen $salesman) 
     {
-       $customers =  Salesmen::findOrFail($code)->customers;
-       return response()->json($customers,200);
+        $customers = $salesman->customers;
+
+        if ($customers->isEmpty()) {
+            return response()->json(["message" => "No customers found for this salesman"], 200);
+        }
+
+        return response()->json($customers, 200);
     }
 }

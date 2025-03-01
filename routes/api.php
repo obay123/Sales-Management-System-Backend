@@ -24,6 +24,6 @@ Route::get('/user', function (Request $request) {
  Route::apiResource('salesmen',SalesmenController::class); 
  Route::apiResource('invoices', InvoiceController::class);
 
- Route::get('salesmen/{code}/customers', [SalesmenController::class,'GetCustomers']);
+ Route::get('/salesmen/{salesman}/customers', [SalesmenController::class, 'getCustomers']);
 
 

@@ -12,7 +12,7 @@ class InvoiceController extends Controller
     // List all invoices
     public function index()
     {
-        $invoices = Invoice::all();
+        $invoices = Invoice::with('items')->get();
         return response()->json($invoices);
     }
 
@@ -35,28 +35,28 @@ class InvoiceController extends Controller
             'total_price' => $totalPrice,
         ]);
 
+        $itemsToAttach = [];
         foreach ($validated['items'] as $item) {
-            $invoice->items()->attach($item['item_code'], [
+            $itemsToAttach[$item['item_code']] = [
                 'quantity' => $item['quantity'],
                 'unit_price' => $item['unit_price'],
                 'line_total' => $item['quantity'] * $item['unit_price'],
-            ]);
+            ];
         }
+        $invoice->items()->attach($itemsToAttach);
+
         return response()->json($invoice->load('items'), 201);
     }
 
     // Show a single invoice
-    public function show($id)
+    public function show(Invoice $invoice)
     {
-        $invoice = Invoice::findOrFail($id);
-        return response()->json($invoice);
+        return response()->json($invoice->load('items'));
     }
 
     // Update an existing invoice
-    public function update(UpdateInvoiceRequest $request, $id)
+    public function update(UpdateInvoiceRequest $request, Invoice $invoice)
     {
-        $invoice = Invoice::findOrFail($id);
-
         $validated = $request->validated();
 
         $invoice->update([
@@ -68,31 +68,32 @@ class InvoiceController extends Controller
             $totalQuantity = 0;
             $totalPrice = 0;
 
-            $invoice->items()->detach();
-
+            $itemsToSync = [];
             foreach ($validated['items'] as $item) {
                 $totalQuantity += $item['quantity'];
                 $totalPrice += $item['quantity'] * $item['unit_price'];
 
-                $invoice->items()->attach($item['item_code'], [
+                $itemsToSync[$item['item_code']] = [
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'line_total' => $item['quantity'] * $item['unit_price'],
-                ]);
+                ];
             }
+            $invoice->items()->sync($itemsToSync);
+            
             $invoice->update([
                 'total_quantity' => $totalQuantity,
                 'total_price' => $totalPrice,
             ]);
         }
+
         return response()->json($invoice->load('items'), 200);
     }
-    
+
     // Delete an invoice
-    public function destroy($id)
+    public function destroy(Invoice $invoice)
     {
-        $invoice = Invoice::findOrFail($id);
         $invoice->delete();
-        return response()->json(['message' => 'Invoice deleted successfully'], 204);
+        return response()->json(['message' => 'Invoice deleted successfully'], 200);
     }
 }

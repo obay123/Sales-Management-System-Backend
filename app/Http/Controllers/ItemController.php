@@ -9,37 +9,32 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    function store(StoreItemRequest $request){
+    function store(StoreItemRequest $request)
+    {
         $item = Item::create($request->validated());
-        return response()->json($item,201);
-     }
-    
-    
-     function index (){
-      $items =  Item::all();
-      return response()->json($items,200);
-     }
-    
-    
-     function update(UpdateItemRequest $request,$itemId){
-       $item =  Item::findOrFail($itemId);
-       $item->update($request->validated());
-       return response()->json($item , 200);
-     }
-    
-    
-     function show($itemId){
-         $item = Item::find($itemId);
-         return response()->json($item,200);
-     }
-    
-    
-    
-     function destroy($itemId){
-         $item =  Item::findOrFail($itemId);
-         $item->delete();
-         return response()->json(204);
-     }
-    
-    
+        return response()->json($item, 201);
+    }
+
+    function index()
+    {
+        $items = Item::paginate(10); 
+        return response()->json($items, 200);
+    }
+
+    function update(UpdateItemRequest $request, Item $item)
+    {
+        $item->update($request->validated());
+        return response()->json($item, 200);
+    }
+
+    function show(Item $item)
+    {
+        return response()->json($item, 200);
+    }
+
+    function destroy(Item $item)
+    {
+        $item->delete();
+        return response()->json(['message' => 'Item deleted successfully'], 204);
+    }
 }
