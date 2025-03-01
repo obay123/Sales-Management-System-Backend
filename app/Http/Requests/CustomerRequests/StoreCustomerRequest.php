@@ -25,8 +25,9 @@ class StoreCustomerRequest extends FormRequest
             'gender' => 'required|string|in:male,female',
             'subscription_date' => 'nullable|date',
             'rate' => 'required|integer|max:5|min:1',
-            'tags' => 'required|array|',
-            'tags.*' => 'string'
+            'tags' => 'required|array',
+            'tags.*' => 'string',
+           
         ];
     }
 }

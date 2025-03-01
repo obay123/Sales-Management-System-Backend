@@ -33,7 +33,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::findOrFail($customerId);
         $customer->update($request->validated());
-        return response()->json($customer,200);
+        return response()->json($customer,201);
     }
 
    
