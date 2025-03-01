@@ -21,7 +21,8 @@ class UpdateInvoiceRequest extends FormRequest
             'items'       => 'sometimes|required|array|min:1',
             'items.*.item_code'  => 'sometimes|required|exists:items,code',
             'items.*.quantity'   => 'sometimes|required|integer|min:1',
-            'items.*.unit_price' => 'sometimes|required|numeric|min:0'
+            'items.*.unit_price' => 'sometimes|required|numeric|min:1',
+            'date'=>'sometimes|before_or_equal:today'
         ];
     } 
 }

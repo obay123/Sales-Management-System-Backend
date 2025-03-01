@@ -20,7 +20,8 @@ class StoreInvoiceRequest extends FormRequest
             'items'       => 'required|array|min:1',
             'items.*.item_code'  => 'required|exists:items,code',
             'items.*.quantity'   => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0'
+            'items.*.unit_price' => 'required|numeric|min:1',
+            'date'=>'sometimes|before_or_equal:today'
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InvoiceRequest\StoreInvoiceRequest;
+use App\Http\Requests\InvoiceRequest\UpdateInvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 
@@ -21,12 +22,12 @@ class InvoiceController extends Controller
         $validated = $request->validated();
         $totalQuantity = 0;
         $totalPrice = 0;
-        
+
         foreach ($validated['items'] as $item) {
             $totalQuantity += $item['quantity'];
             $totalPrice += $item['quantity'] * $item['unit_price'];
         }
-        
+
         $invoice = Invoice::create([
             'customer_id' => $validated['customer_id'],
             'date' => $validated['date'] ?? now(),
@@ -52,27 +53,41 @@ class InvoiceController extends Controller
     }
 
     // Update an existing invoice
-    public function update(Request $request, $id)
+    public function update(UpdateInvoiceRequest $request, $id)
     {
         $invoice = Invoice::findOrFail($id);
 
-        $validated = $request->validate([
-            'customer_id'    => 'sometimes|required|exists:customers,id',
-            'total_quantity' => 'sometimes|required|integer',
-            'price'          => 'sometimes|required|numeric',
-            'date'           => 'sometimes|nullable|date'
+        $validated = $request->validated();
+
+        $invoice->update([
+            'customer_id' => $validated['customer_id'] ?? $invoice->customer_id,
+            'date' => $validated['date'] ?? $invoice->date,
         ]);
 
-        if (isset($validated['price']) || isset($validated['total_quantity'])) {
-            $price = $validated['price'] ?? $invoice->price;
-            $quantity = $validated['total_quantity'] ?? $invoice->total_quantity;
-            $validated['total_price'] = $price * $quantity;
+        if (isset($validated['items'])) {
+            $totalQuantity = 0;
+            $totalPrice = 0;
+
+            $invoice->items()->detach();
+
+            foreach ($validated['items'] as $item) {
+                $totalQuantity += $item['quantity'];
+                $totalPrice += $item['quantity'] * $item['unit_price'];
+
+                $invoice->items()->attach($item['item_code'], [
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'line_total' => $item['quantity'] * $item['unit_price'],
+                ]);
+            }
+            $invoice->update([
+                'total_quantity' => $totalQuantity,
+                'total_price' => $totalPrice,
+            ]);
         }
-
-        $invoice->update($validated);
-        return response()->json($invoice, 200);
+        return response()->json($invoice->load('items'), 200);
     }
-
+    
     // Delete an invoice
     public function destroy($id)
     {
