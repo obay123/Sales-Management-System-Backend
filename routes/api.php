@@ -13,16 +13,17 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-// Route::post('/items',[ItemController::class,'store']);
-// Route::get('/items',[ItemController::class,'index']);
-// Route::put('/items/{itemId}',[ItemController::class,'update']);
-// Route::get('/items/{itemId}',[ItemController::class,'show']);
-// Route::delete('/items/{itemId}',[ItemController::class,'destroy']); 
+Route::post('register',[UserController::class,'register']);
+Route::post('login',[UserController::class,'login']);
+Route::post('logout',[UserController::class,'logout'])->middleware('auth:sanctum');
+
+
 
  Route::apiResource('items',ItemController::class);
  Route::apiResource('customers',CustomerController::class);
  Route::apiResource('salesmen',SalesmenController::class); 
  Route::apiResource('invoices', InvoiceController::class);
+
 
  Route::get('/salesmen/{salesman}/customers', [SalesmenController::class, 'getCustomers']);
 
