@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -21,12 +21,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password', 
+        'password',
     ];
-
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -35,8 +32,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array
@@ -45,5 +40,23 @@ class User extends Authenticatable
             // 'email_verified_at' => 'datetime',
             // 'password' => 'hashed',
         ];
+    }
+
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+    public function salesmen()
+    {
+        return $this->hasMany(Salesmen::class);
+    }
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     }
 }

@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->string('code')->unique()->primary();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name')->unique();
             $table->string('description')->nullable();
             $table->timestamps();

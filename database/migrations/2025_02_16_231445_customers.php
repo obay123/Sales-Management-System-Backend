@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('salesmen_code', 100);
             $table->foreign('salesmen_code')->references('code')->on('salesmens')->onDelete('cascade');
         

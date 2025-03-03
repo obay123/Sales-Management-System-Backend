@@ -19,7 +19,7 @@ Route::post('logout',[UserController::class,'logout'])->middleware('auth:sanctum
 
 
 
- Route::apiResource('items',ItemController::class);
+ Route::apiResource('items',ItemController::class)->middleware('auth:sanctum');
  Route::apiResource('customers',CustomerController::class);
  Route::apiResource('salesmen',SalesmenController::class); 
  Route::apiResource('invoices', InvoiceController::class);

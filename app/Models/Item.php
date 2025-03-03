@@ -16,6 +16,9 @@ class Item extends Model
         return $this->belongsToMany(Invoice::class, 'invoice_item')
                     ->withPivot('quantity', 'unit_price', 'line_total');
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    } 
 }
     
