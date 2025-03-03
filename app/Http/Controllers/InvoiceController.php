@@ -6,17 +6,16 @@ use App\Http\Requests\InvoiceRequest\StoreInvoiceRequest;
 use App\Http\Requests\InvoiceRequest\UpdateInvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
-    // List all invoices
     public function index()
     {
-        $invoices = Invoice::with('items')->get();
+        $invoices = Auth::user()->invoices->with('items')->get();
         return response()->json($invoices);
     }
 
-    // Create a new invoice
     public function store(StoreInvoiceRequest $request)
     {
         $validated = $request->validated();
@@ -29,6 +28,7 @@ class InvoiceController extends Controller
         }
 
         $invoice = Invoice::create([
+            'user_id' => Auth::user()->id,
             'customer_id' => $validated['customer_id'],
             'date' => $validated['date'] ?? now(),
             'total_quantity' => $totalQuantity,
@@ -44,19 +44,23 @@ class InvoiceController extends Controller
             ];
         }
         $invoice->items()->attach($itemsToAttach);
-
         return response()->json($invoice->load('items'), 201);
     }
 
-    // Show a single invoice
     public function show(Invoice $invoice)
     {
+        if ($invoice->user_id != Auth::user()->id) {
+            return response()->json(["message" => "Unauthorized access"], 403);
+        }
         return response()->json($invoice->load('items'));
     }
 
-    // Update an existing invoice
     public function update(UpdateInvoiceRequest $request, Invoice $invoice)
     {
+        if ($invoice->user_id != Auth::user()->id) {
+            return response()->json(["message" => "Unauthorized access"], 403);
+        }
+
         $validated = $request->validated();
 
         $invoice->update([
@@ -86,13 +90,14 @@ class InvoiceController extends Controller
                 'total_price' => $totalPrice,
             ]);
         }
-
         return response()->json($invoice->load('items'), 200);
     }
 
-    // Delete an invoice
     public function destroy(Invoice $invoice)
     {
+        if ($invoice->user_id != Auth::user()->id) {
+            return response()->json(["message" => "Unauthorized access"], 403);
+        }
         $invoice->delete();
         return response()->json(['message' => 'Invoice deleted successfully'], 200);
     }

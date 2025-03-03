@@ -11,7 +11,8 @@ class Invoice extends Model
         'total_quantity',
         'price',
         'total_price',
-        'date'
+        'date',
+        'user_id'
     ];
 
     public function customer()

@@ -12,19 +12,21 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
-Route::post('register',[UserController::class,'register']);
-Route::post('login',[UserController::class,'login']);
-Route::post('logout',[UserController::class,'logout'])->middleware('auth:sanctum');
+Route::post('register', [UserController::class, 'register']);
+Route::post('login', [UserController::class, 'login']);
 
 
 
- Route::apiResource('items',ItemController::class)->middleware('auth:sanctum');
- Route::apiResource('customers',CustomerController::class);
- Route::apiResource('salesmen',SalesmenController::class); 
- Route::apiResource('invoices', InvoiceController::class);
+
+Route::middleware('auth:sanctum')->group(function () 
+{
+    Route::post('logout', [UserController::class, 'logout']);
+    Route::apiResource('items', ItemController::class);
+    Route::apiResource('customers', CustomerController::class);
+    Route::apiResource('salesmen', SalesmenController::class);
+    Route::apiResource('invoices', InvoiceController::class);
+});
 
 
- Route::get('/salesmen/{salesman}/customers', [SalesmenController::class, 'getCustomers']);
 
-
+Route::get('/salesmen/{salesman}/customers', [SalesmenController::class, 'getCustomers']);

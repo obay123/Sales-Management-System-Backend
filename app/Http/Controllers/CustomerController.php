@@ -6,40 +6,48 @@ use App\Http\Requests\CustomerRequests\StoreCustomerRequest;
 use App\Http\Requests\CustomerRequests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
-    // List all customers
     public function index()
     {
-        $customers = Customer::paginate(10);
+        $customers = Auth::user()->customers;
         return response()->json($customers, 200);
     }
 
-    // Create a new customer
     public function store(StoreCustomerRequest $request)
     {
-        $customer = Customer::create($request->validated());
+        $user_id = Auth::user()->id;
+        $validatedData = $request->validated();
+        $validatedData['user_id'] = $user_id;
+        $customer = Customer::create($validatedData);
         return response()->json($customer, 201);
     }
     
-    // Show a single customer
-    public function show(Customer $customer) 
+    public function show(Customer $customer)
     {
+        if ($customer->user_id != Auth::user()->id) {
+            return response()->json(["message" => "Unauthorized access"], 403);
+        }
         return response()->json($customer, 200);
     }
 
-    // Update an existing customer
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
+        if ($customer->user_id != Auth::user()->id) {
+            return response()->json(["message" => "Unauthorized access"], 403);
+        }
         $customer->update($request->validated());
         return response()->json($customer, 200);
     }
 
-    // Delete a customer
     public function destroy(Customer $customer)
     {
+        if ($customer->user_id != Auth::user()->id) {
+            return response()->json(["message" => "Unauthorized access"], 403);
+        }
         $customer->delete();
-        return response()->json(["message" => "Deleted successfully"], 200); 
+        return response()->json(["message" => "Deleted successfully"], 200);
     }
 }
