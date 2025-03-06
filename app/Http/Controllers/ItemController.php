@@ -21,7 +21,7 @@ class ItemController extends Controller
 
     function index()
     {
-        $items = Auth::user()->items()->paginate(1);
+        $items = Auth::user()->items()->paginate(20);
         return response()->json($items, 200);
     }
 

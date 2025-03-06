@@ -12,7 +12,7 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Auth::user()->invoices->with('items')->get();
+        $invoices = Auth::user()->invoices->with('items')->get()->paginate(20);
         return response()->json($invoices);
     }
 

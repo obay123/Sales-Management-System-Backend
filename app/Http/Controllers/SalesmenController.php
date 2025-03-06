@@ -12,7 +12,7 @@ class SalesmenController extends Controller
 {
     public function index()
     {
-        $salesmen = Auth::user()->salesmen;
+        $salesmen = Auth::user()->salesmen()->paginate(20);
         return response()->json($salesmen, 200);
     }
 

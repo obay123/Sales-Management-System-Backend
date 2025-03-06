@@ -12,7 +12,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Auth::user()->customers;
+        $customers = Auth::user()->customers()->paginate(20);
         return response()->json($customers, 200);
     }
 

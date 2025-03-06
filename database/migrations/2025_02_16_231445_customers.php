@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('salesmen_code', 100);
             $table->foreign('salesmen_code')->references('code')->on('salesmens')->onDelete('cascade');
         
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('tel1');
             $table->string('tel2')->nullable();
             $table->text('address')->nullable();
