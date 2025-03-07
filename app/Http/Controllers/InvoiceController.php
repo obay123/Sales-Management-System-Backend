@@ -7,6 +7,8 @@ use App\Http\Requests\InvoiceRequest\UpdateInvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\Export;
 
 class InvoiceController extends Controller
 {
@@ -100,5 +102,15 @@ class InvoiceController extends Controller
         }
         $invoice->delete();
         return response()->json(['message' => 'Invoice deleted successfully'], 200);
+    }
+
+    public function exportInvoices()
+    {
+        $query = Invoice::where('user_id', Auth::id());
+        $columns = ['id','customer_id', 'total_quantity', 'total_price', 'date', 'created_at'];
+        $headings = ["ID", "Customer ID", "Total Quantity", "Total Price", "Date","Created At"];
+    
+        return Excel::download(new Export($query, $columns, $headings), 'invoices.xlsx');
+
     }
 }

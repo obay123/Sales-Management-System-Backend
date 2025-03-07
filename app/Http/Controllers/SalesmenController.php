@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Export;
 use App\Http\Requests\SalesmenRequests\StoreSalesmenRequest;
 use App\Http\Requests\SalesmenRequests\UpdateSalesmenRequest;
 use App\Models\Salesmen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SalesmenController extends Controller
 {
@@ -49,6 +51,16 @@ class SalesmenController extends Controller
         $salesman->delete();
         return response()->json(null, 204);
     }
+
+    public function exportSalesmen()
+    {
+        $query = Salesmen::where('user_id', Auth::id());
+        $columns = ['code','name', 'phone', 'address', 'is_inactive', 'created_at'];
+        $headings = ["code", "Name", "Phone", "Aadress", "Is Inactive","Created At"];
+    
+        return Excel::download(new Export($query, $columns, $headings), 'salesmen.xlsx');
+    }
+    
 
     // public function getCustomers(Salesmen $salesman)
     // {

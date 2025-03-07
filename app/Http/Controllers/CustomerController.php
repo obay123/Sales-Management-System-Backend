@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Export;
 use App\Http\Requests\CustomerRequests\StoreCustomerRequest;
 use App\Http\Requests\CustomerRequests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class CustomerController extends Controller
 {
@@ -24,7 +27,7 @@ class CustomerController extends Controller
         $customer = Customer::create($validatedData);
         return response()->json($customer, 201);
     }
-    
+
     public function show(Customer $customer)
     {
         if ($customer->user_id != Auth::user()->id) {
@@ -49,5 +52,26 @@ class CustomerController extends Controller
         }
         $customer->delete();
         return response()->json(["message" => "Deleted successfully"], 200);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $customerIds = $request->input('ids');
+        $deletedCount = Customer::whereIn('id', $customerIds)
+        ->where('user_id', auth()->id())
+        ->delete();
+        return response()->json([
+            "message" => "$deletedCount customers deleted successfully"
+        ], 200);
+    }
+
+    public function exportCustomers()
+    {
+        $query = Customer::where('user_id', Auth::id());
+        $columns = ['id', 'name', 'salesmen_code', 'tel1', 'tel2', 'address', 'gender', 'subscription_date', 'rate', 'tags', 'created_at'];
+        $headings = ["ID", "Name", "Salesmen Code", "Tel1", "Tel2", "Address", "Gender", "Subscription Date", "Rate", "Tags", "Created At"];
+    
+        return Excel::download(new Export($query, $columns, $headings), 'customers.xlsx');
+
     }
 }

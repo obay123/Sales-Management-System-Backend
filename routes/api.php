@@ -15,13 +15,21 @@ Route::get('/user', function (Request $request) {
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () 
-{
-    Route::post('logout', [UserController::class, 'logout']);
-    Route::apiResource('items', ItemController::class);
-    Route::apiResource('customers', CustomerController::class);
-    Route::apiResource('salesmen', SalesmenController::class);
-    Route::apiResource('invoices', InvoiceController::class);
-});
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::get('/salesmen/{salesman}/customers', [SalesmenController::class, 'getCustomers']);
+    Route::post('logout', [UserController::class, 'logout']);
+
+    Route::get('items/export', [ItemController::class, 'exportItems']);
+    Route::apiResource('items', ItemController::class);
+
+    Route::apiResource('invoices', InvoiceController::class);
+    Route::get('invoices/export', [InvoiceController::class, 'exportInvoices']);
+
+    Route::prefix('customers')->group(function () {
+        Route::get('/export', [CustomerController::class, 'exportCustomers']);
+        Route::delete('/bulk-delete', [CustomerController::class, 'bulkDelete']);
+        Route::apiResource('', CustomerController::class);
+    });
+    Route::apiResource('salesmen', SalesmenController::class);
+    Route::get('salesmen/export', [SalesmenController::class, 'exportSalesmen']);
+});

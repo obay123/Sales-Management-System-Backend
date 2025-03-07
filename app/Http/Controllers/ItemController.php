@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Export;
 use App\Http\Requests\ItemRequest\StoreItemRequest;
 use App\Http\Requests\ItemRequest\UpdateItemRequest;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemController extends Controller
 {
@@ -61,5 +63,14 @@ class ItemController extends Controller
         }
         $item->delete();
         return response()->json(['message' => 'Item deleted successfully.'], 204);
+    }
+    
+    public function exportItems()
+    {
+        $query = Item::where('user_id', Auth::id());
+        $columns = ['code','name', 'description','created_at'];
+        $headings = ["code", "Name", "Description","Created At"];
+    
+        return Excel::download(new Export($query, $columns, $headings), 'items.xlsx');
     }
 }
