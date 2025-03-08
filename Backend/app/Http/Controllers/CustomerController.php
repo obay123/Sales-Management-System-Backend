@@ -24,6 +24,10 @@ class CustomerController extends Controller
         $user_id = Auth::user()->id;
         $validatedData = $request->validated();
         $validatedData['user_id'] = $user_id;
+        if($request->hasFile('photo')){
+            $path = $request->file('photo')->store('customers photo','public');
+            $validatedData['photo'] = $path ;
+        }
         $customer = Customer::create($validatedData);
         return response()->json($customer, 201);
     }
