@@ -1,9 +1,9 @@
     
 
-export default function Home() {
+export default function Customers() {
   return (
     <div className="main-div">
-      <h1>Hello World</h1>
+      <h1>customers page</h1>
     </div>
   );
 }

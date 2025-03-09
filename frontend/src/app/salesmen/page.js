@@ -1,9 +1,9 @@
     
 
-export default function Home() {
+export default function Salesmen() {
   return (
     <div className="main-div">
-      <h1>Hello World</h1>
+      <h1>salesmen page</h1>
     </div>
   );
 }

@@ -21,12 +21,15 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password'])
         ]);
-        return response()->json($user, 201);
+        return response()->json([
+            'message' => 'Registration successful',
+            'user'=>$user
+        ], 201);
     }
 
     public function login(Request $request)
     {
-         $request->validate([
+        $request->validate([
             'email' => 'email|string',
             'password' => 'string|required'
         ]);
@@ -35,19 +38,20 @@ class UserController extends Controller
                 ['message' => 'login failed'],
                 401
             );
-            $user = User::where('email',$request->email)->FirstOrFail();
-            $token = $user->createToken('auth_token')->plainTextToken;
-            return  response()->json([
-                'user'=>$user,
-                'token'=>$token
-            ], 200);
+        $user = User::where('email', $request->email)->FirstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return  response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token
+        ], 200);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json([
-            "message"=>"logout successful"
-        ],200);
+            "message" => "logout successful"
+        ], 200);
     }
 }
