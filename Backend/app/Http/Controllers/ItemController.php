@@ -12,14 +12,19 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ItemController extends Controller
 {
-    function store(StoreItemRequest $request)
+    public function store(StoreItemRequest $request)
     {
-        $user_id = Auth::user()->id;
-        $validatedData = $request->validated();
-        $validatedData['user_id'] = $user_id;
-        $item = Item::create($validatedData);
-        return response()->json($item, 201);
+        try {
+            $user_id = Auth::id(); 
+            $validatedData = $request->validated();
+            $validatedData['user_id'] = $user_id;
+            $item = Item::create($validatedData);
+            return response()->json($item, 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error adding item'], 500);
+        }
     }
+    
 
     function index()
     {
@@ -64,13 +69,13 @@ class ItemController extends Controller
         $item->delete();
         return response()->json(['message' => 'Item deleted successfully.'], 204);
     }
-    
+
     public function exportItems()
     {
         $query = Item::where('user_id', Auth::id());
-        $columns = ['code','name', 'description','created_at'];
-        $headings = ["code", "Name", "Description","Created At"];
-    
+        $columns = ['code', 'name', 'description', 'created_at'];
+        $headings = ["code", "Name", "Description", "Created At"];
+
         return Excel::download(new Export($query, $columns, $headings), 'items.xlsx');
     }
 }

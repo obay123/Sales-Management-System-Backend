@@ -1,0 +1,82 @@
+const API_URL = '/api/items'
+
+const useItemsApi = () => {
+    const Token = localStorage.getItem('Token')
+
+    const addItem = async (code, name, description) => {
+        if (!Token) {
+            throw new Error("No auth token found");
+        }
+        try {
+            const response = await fetch(`${API_URL}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+                body: JSON.stringify({ code, name, description })
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to add item');
+            }
+            const data = await response.json()
+            return data
+        }
+        catch (error) {
+            console.error("Error adding item:", error.message);
+            throw error
+        }
+    }
+    const getItems = async () => {
+        if (!Token) {
+            throw new Error("No auth token found")
+        }
+        try {
+            const response = await fetch(`${API_URL}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to fetch items');
+            }
+            const data = await response.json()
+            return data
+        } catch (error) {
+            console.error("Error fetching item:", error.message);
+            throw error
+        }
+    }
+    const deleteItem = async (id) => {
+        if (!Token) {
+            throw new Error("No auth token found")
+        }
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete items');
+            }
+            const data = await response.json()
+            return data
+        } catch (error) {
+                throw error 
+        }
+
+
+
+       
+    }
+    return { addItem, getItems, deleteItem };
+}
+    export default useItemsApi;

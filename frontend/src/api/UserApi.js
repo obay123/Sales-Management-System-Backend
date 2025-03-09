@@ -23,7 +23,7 @@ export const login = async (email, password) => {
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.message || 'Login failed');
-        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('Token', data.token);
         return data.message;
     } catch (error) {
         console.error("Login Error:", error.message);
