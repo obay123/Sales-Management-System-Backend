@@ -32,7 +32,10 @@ class ItemController extends Controller
         if ($items->isEmpty()) {
             return response()->json(['message' => 'no items found'], 200);
         }
-        return response()->json($items, 200);
+        return response()->json([
+            'message' => 'items retrieved successfully',
+            'items' => $items
+        ], 200);
     }
 
     public function update(UpdateItemRequest $request, Item $item)
@@ -40,13 +43,18 @@ class ItemController extends Controller
         $user_id = Auth::user()->id;
         if ($item->user_id != $user_id) {
             return response()->json(
-                ['message' =>
-                'You are not authorized to update this item.'],
+                [
+                    'message' =>
+                        'You are not authorized to update this item.'
+                ],
                 403
             );
         }
         $item->update($request->validated());
-        return response()->json($item, 200);
+        return response()->json([
+            'message' => 'Updated successfully',
+            'items' => $item
+        ], 200);
     }
 
     public function show(Item $item)
@@ -54,23 +62,30 @@ class ItemController extends Controller
         $user_id = Auth::user()->id;
         if ($item->user_id != $user_id) {
             return response()->json(
-                ['message'
-                => 'You are not authorized to view this item.'],
+                [
+                    'message'
+                    => 'You are not authorized to view this item.'
+                ],
                 403
             );
         }
-        return response()->json($item, 200);
+        return response()->json([
+            'message' => 'item retrieved successfully',
+            'items' => $item
+        ], 200);
     }
 
     public function destroy(Item $item)
     {
         $user_id = Auth::user()->id;
         if ($item->user_id != $user_id) {
-            return response()->json(['message' =>
-            'You are not authorized to delete this item.'], 403);
+            return response()->json([
+                'message' =>
+                    'You are not authorized to delete this item.'
+            ], 403);
         }
         $item->delete();
-        return response()->json(['message' => 'Item deleted successfully.'], 204);
+        return response()->json(['message' => 'Item deleted successfully.'], 200);
     }
 
     public function exportItems()
