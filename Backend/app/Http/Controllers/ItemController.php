@@ -88,6 +88,17 @@ class ItemController extends Controller
         return response()->json(['message' => 'Item deleted successfully.'], 200);
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ItemIds = $request->input('ids');
+        $deletedCount = Item::whereIn('id', $ItemIds)
+            ->where('user_id', auth()->id())
+            ->delete();
+        return response()->json([
+            "message" => "$deletedCount customers deleted successfully"
+        ], 200);
+    }
+
     public function exportItems()
     {
         $query = Item::where('user_id', Auth::id());

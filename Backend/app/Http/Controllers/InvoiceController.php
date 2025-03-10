@@ -104,6 +104,17 @@ class InvoiceController extends Controller
         return response()->json(['message' => 'Invoice deleted successfully'], 200);
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ItemIds = $request->input('ids');
+        $deletedCount = Invoice::whereIn('id', $ItemIds)
+            ->where('user_id', auth()->id())
+            ->delete();
+        return response()->json([
+            "message" => "$deletedCount customers deleted successfully"
+        ], 200);
+    }
+
     public function exportInvoices()
     {
         $query = Invoice::where('user_id', Auth::id());
@@ -111,6 +122,5 @@ class InvoiceController extends Controller
         $headings = ["ID", "Customer ID", "Total Quantity", "Total Price", "Date", "Created At"];
 
         return Excel::download(new Export($query, $columns, $headings), 'invoices.xlsx');
-
     }
 }

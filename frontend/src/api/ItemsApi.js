@@ -74,7 +74,7 @@ const useItemsApi = () => {
         }
     }
 
-    const updateItem = async (id, updatedData) {
+    const updateItem = async (id, updatedData) =>{
         if (!Token) {
             throw new Error("No auth token found");
         }

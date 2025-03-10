@@ -19,17 +19,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('logout', [UserController::class, 'logout']);
 
-    Route::get('items/export', [ItemController::class, 'exportItems']);
-    Route::apiResource('items', ItemController::class);
+    Route::prefix('items')->group(function () {
+    Route::get('/export', [ItemController::class, 'exportItems']);
+    Route::apiResource('', ItemController::class);
+    Route::delete('/bulk-delete', [ItemController::class, 'bulkDelete']);
+    });
 
-    Route::apiResource('invoices', InvoiceController::class);
-    Route::get('invoices/export', [InvoiceController::class, 'exportInvoices']);
+    Route::prefix('invoices')->group(function () {
+    Route::apiResource('', InvoiceController::class);
+    Route::get('/export', [InvoiceController::class, 'exportInvoices']);
+    Route::delete('/bulk-delete', [InvoiceController::class, 'bulkDelete']);
+    });
 
     Route::prefix('customers')->group(function () {
         Route::get('/export', [CustomerController::class, 'exportCustomers']);
         Route::delete('/bulk-delete', [CustomerController::class, 'bulkDelete']);
         Route::apiResource('', CustomerController::class);
     });
-    Route::apiResource('salesmen', SalesmenController::class);
-    Route::get('salesmen/export', [SalesmenController::class, 'exportSalesmen']);
+
+    Route::prefix('saleman')->group(function () {
+    Route::apiResource('', SalesmenController::class);
+    Route::get('/export', [SalesmenController::class, 'exportSalesmen']);
+    Route::delete('/bulk-delete', [SalesmenController::class, 'bulkDelete']);
+    });
 });

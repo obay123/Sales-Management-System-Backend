@@ -55,6 +55,17 @@ class SalesmenController extends Controller
         return response()->json(["message" => "Salesman deleted successfully"], 200);
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ItemIds = $request->input('ids');
+        $deletedCount = Salesmen::whereIn('id', $ItemIds)
+            ->where('user_id', auth()->id())
+            ->delete();
+        return response()->json([
+            "message" => "$deletedCount customers deleted successfully"
+        ], 200);
+    }
+
     public function exportSalesmen()
     {
         $query = Salesmen::where('user_id', Auth::id());
