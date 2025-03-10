@@ -39,7 +39,7 @@ class CustomerController extends Controller
         }
         return response()->json([
             'message' => 'retrieved successfully',
-            'customer' => $customer
+            'data' => $customer
         ], 200);
     }
 
@@ -49,7 +49,7 @@ class CustomerController extends Controller
             return response()->json(["message" => "Unauthorized access"], 403);
         }
         $customer->update($request->validated());
-        return response()->json(["message" => "Customer updated successfully", 'customer' => $customer], 200);
+        return response()->json(["message" => "Customer updated successfully", 'data' => $customer], 200);
     }
 
     public function destroy(Customer $customer)

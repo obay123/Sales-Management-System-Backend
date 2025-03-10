@@ -34,7 +34,7 @@ class ItemController extends Controller
         }
         return response()->json([
             'message' => 'items retrieved successfully',
-            'items' => $items
+            'data' => $items
         ], 200);
     }
 
@@ -53,7 +53,7 @@ class ItemController extends Controller
         $item->update($request->validated());
         return response()->json([
             'message' => 'Updated successfully',
-            'items' => $item
+            'data' => $item
         ], 200);
     }
 
@@ -71,7 +71,7 @@ class ItemController extends Controller
         }
         return response()->json([
             'message' => 'item retrieved successfully',
-            'items' => $item
+            'data' => $item
         ], 200);
     }
 
