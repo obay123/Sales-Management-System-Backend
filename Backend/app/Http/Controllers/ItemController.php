@@ -15,7 +15,7 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         try {
-            $user_id = Auth::id(); 
+            $user_id = Auth::id();
             $validatedData = $request->validated();
             $validatedData['user_id'] = $user_id;
             $item = Item::create($validatedData);
@@ -24,11 +24,14 @@ class ItemController extends Controller
             return response()->json(['message' => 'Error adding item'], 500);
         }
     }
-    
+
 
     function index()
     {
-        $items = Auth::user()->items()->paginate(20);
+        $items = Auth::user()->items;
+        if ($items->isEmpty()) {
+            return response()->json(['message' => 'no items found'], 200);
+        }
         return response()->json($items, 200);
     }
 

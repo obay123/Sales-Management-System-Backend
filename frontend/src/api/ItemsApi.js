@@ -77,6 +77,6 @@ const useItemsApi = () => {
 
        
     }
-    return { addItem, getItems, deleteItem };
+    return { addItem, getItems, deleteItem ,};
 }
     export default useItemsApi;
