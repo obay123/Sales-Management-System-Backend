@@ -70,13 +70,58 @@ const useItemsApi = () => {
             const data = await response.json()
             return data
         } catch (error) {
-                throw error 
+            throw error
         }
-
-
-
-       
     }
-    return { addItem, getItems, deleteItem ,};
+
+    const updateItem = async (id, updatedData) {
+        if (!Token) {
+            throw new Error("No auth token found");
+        }
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+                body: JSON.stringify(updatedData)
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update item');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error updating item:", error.message);
+            throw error;
+        }
+    }
+    const showItem = async (id) => {
+        if (!Token) {
+            throw new Error("No auth token found");
+        }
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+            })
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update item');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error updating item:", error.message);
+            throw error
+        }
+    }
+
+    return { addItem, getItems, deleteItem, updateItem, showItem };
 }
-    export default useItemsApi;
+export default useItemsApi;

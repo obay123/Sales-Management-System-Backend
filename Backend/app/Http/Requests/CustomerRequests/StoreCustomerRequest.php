@@ -23,7 +23,6 @@ class StoreCustomerRequest extends FormRequest
             'rate' => 'required|integer|max:5|min:1',
             'tags' => 'required|array',
             'tags.*' => 'string',
-           
         ];
     }
 }
