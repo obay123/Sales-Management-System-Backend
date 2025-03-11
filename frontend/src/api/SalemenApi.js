@@ -122,7 +122,29 @@ const useInvoicesApi = () => {
             throw error
         }
     }
-
-    return { showSalesmen, updateSalesmen, deleteSalesmen, getSalesmen ,addSalesmen};
+    const bulkDeleteSalesmen = async (ids) => {
+        if (!Token) {
+            throw new Error("No auth token found");
+        }
+        try {
+            const response = await fetch(`${API_URL}/bulk-delete`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+                body: JSON.stringify({ ids })
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete salesmen');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error deleting salesmen:", error.message);
+            throw error;
+        }
+    };
+    return { showSalesmen, updateSalesmen, deleteSalesmen, getSalesmen ,addSalesmen,bulkDeleteSalesmen};
 }
 export default useItemsApi;

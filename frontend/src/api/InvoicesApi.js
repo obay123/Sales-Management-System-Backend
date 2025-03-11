@@ -121,7 +121,30 @@ const useInvoicesApi = () => {
             throw error
         }
     }
+    const bulkDeleteInvoices = async (ids) => {
+        if (!Token) {
+            throw new Error("No auth token found");
+        }
+        try {
+            const response = await fetch(`${API_URL}/bulk-delete`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+                body: JSON.stringify({ ids })
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete invoices');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error deleting invoices:", error.message);
+            throw error;
+        }
+    };
 
-    return { showInvoice, updateInvoice, deleteInvoice, getInvoice ,addInvoice};
+    return { showInvoice, updateInvoice, deleteInvoice, getInvoice ,addInvoice,bulkDeleteInvoices};
 }
 export default useItemsApi;
