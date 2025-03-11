@@ -28,12 +28,12 @@ const useItemsApi = () => {
             throw error
         }
     }
-    const getItems = async () => {
+    const getItems = async (page=1) => {
         if (!Token) {
             throw new Error("No auth token found")
         }
         try {
-            const response = await fetch(`${API_URL}`, {
+            const response = await fetch(`${API_URL}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",

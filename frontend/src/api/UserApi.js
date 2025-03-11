@@ -1,3 +1,7 @@
+
+
+
+
 export const register = async (name, email, password) => {
     try {
         const response = await fetch('/api/register', {
