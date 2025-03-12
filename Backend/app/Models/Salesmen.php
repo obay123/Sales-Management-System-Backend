@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Salesmen extends Model
 {
-    protected $fillable = ['code', 'name', 'phone', 'address', 'is_inactive','user_id'];
+    protected $fillable = ['code', 'name', 'phone', 'address', 'is_inactive', 'user_id'];
     protected $table = 'salesmens';
     protected $primaryKey = 'code';
-    public    $incrementing = false;
+    public $incrementing = false;
 
     public function customers()
     {

@@ -14,7 +14,7 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Auth::user()->invoices->with('items')->get()->paginate(20);
+        $invoices = Auth::user()->invoices()->with('items')->paginate(20);
         return response()->json(['message' => 'Invoices retrieved successfully', 'data' => $invoices], 200);
     }
 
@@ -92,7 +92,7 @@ class InvoiceController extends Controller
                 'total_price' => $totalPrice,
             ]);
         }
-        return response()->json(['message' => 'Invoices retrieved successfully', 'data' => $invoice->load('items')], 200);
+        return response()->json(['message' => 'Invoices updated successfully', 'data' => $invoice->load('items')], 200);
     }
 
     public function destroy(Invoice $invoice)

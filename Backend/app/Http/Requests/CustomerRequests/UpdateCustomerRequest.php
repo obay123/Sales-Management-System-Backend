@@ -15,8 +15,9 @@ class UpdateCustomerRequest extends FormRequest
         return [
             'name' => 'sometimes|string',
             'tel1' => 'required|string|max:12', 
-            'tel2' => 'nullable|string|max:12',
-            'address' => 'nullable|string',
+            'tel2' => 'sometimes|string|max:12',
+            'photo'=> 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'address' => 'sometimes|string',
             'gender' => 'sometimes|string|in:male,female',
             'subscription_date' => 'nullable|date',
             'rate' => 'sometimes|integer|max:5|min:1',
