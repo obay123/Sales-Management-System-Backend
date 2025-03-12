@@ -14,7 +14,7 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Auth::user()->invoices()->with('items')->paginate(20);
+        $invoices = Auth::user()->invoices()->wth('items')->paginate(20);
         return response()->json(['message' => 'Invoices retrieved successfully', 'data' => $invoices], 200);
     }
 
