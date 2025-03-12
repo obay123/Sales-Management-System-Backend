@@ -147,4 +147,4 @@ const useInvoicesApi = () => {
 
     return { showInvoice, updateInvoice, deleteInvoice, getInvoice ,addInvoice,bulkDeleteInvoices};
 }
-export default useItemsApi;
+export default useInvoicesApi;

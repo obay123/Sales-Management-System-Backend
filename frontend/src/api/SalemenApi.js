@@ -1,6 +1,6 @@
 const API_URL = '/api/salesmen'
 
-const useInvoicesApi = () => {
+const useSalesmenApi = () => {
     const Token = localStorage.getItem('Token')
 
     const addSalesmen = async (salesmenData) => {
@@ -147,4 +147,4 @@ const useInvoicesApi = () => {
     };
     return { showSalesmen, updateSalesmen, deleteSalesmen, getSalesmen ,addSalesmen,bulkDeleteSalesmen};
 }
-export default useItemsApi;
+export default useSalesmenApi;
