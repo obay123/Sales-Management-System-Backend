@@ -28,12 +28,12 @@ const useItemsApi = () => {
             throw error
         }
     }
-    const getItems = async () => {
+    const getItems = async (page=1) => {
         if (!Token) {
             throw new Error("No auth token found")
         }
         try {
-            const response = await fetch(`${API_URL}`, {
+            const response = await fetch(`${API_URL}?page=${page}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -122,6 +122,31 @@ const useItemsApi = () => {
         }
     }
 
-    return { addItem, getItems, deleteItem, updateItem, showItem };
+     const bulkDeleteItems = async (ids) => {
+        if (!Token) {
+            throw new Error("No auth token found");
+        }
+        try {
+            const response = await fetch(`${API_URL}/bulk-delete`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Token}`
+                },
+                body: JSON.stringify({ ids })
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete items');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error deleting items:", error.message);
+            throw error;
+        }
+    };
+
+
+    return { addItem, getItems, deleteItem, updateItem, showItem ,bulkDeleteItems};
 }
 export default useItemsApi;

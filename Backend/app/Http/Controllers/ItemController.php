@@ -28,7 +28,7 @@ class ItemController extends Controller
 
     function index()
     {
-        $items = Auth::user()->items;
+        $items = Auth::user()->items()->paginate(1);
         if ($items->isEmpty()) {
             return response()->json(['message' => 'no items found'], 200);
         }
