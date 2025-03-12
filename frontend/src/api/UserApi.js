@@ -1,8 +1,9 @@
 
 
 
+const userApi  = async()=>{
 
-export const register = async (name, email, password) => {
+ const register = async (name, email, password) => {
     try {
         const response = await fetch('/api/register', {
             method: 'POST',
@@ -18,7 +19,7 @@ export const register = async (name, email, password) => {
     }
 };
 
-export const login = async (email, password) => {
+ const login = async (email, password) => {
     try {
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -35,7 +36,7 @@ export const login = async (email, password) => {
     }
 };
 
-export const logout = async () => {
+ const logout = async () => {
     try {
         const response = await fetch('/api/logout', {
             method: 'POST',
@@ -50,3 +51,7 @@ export const logout = async () => {
         throw error;
     }
 };
+return {logout,login,register}
+}
+
+export default userApi ;

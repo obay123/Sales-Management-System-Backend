@@ -28,7 +28,7 @@ const useInvoicesApi = () => {
             throw error
         }
     }
-    const getInvoice = async (page=1) => {
+    const getInvoices = async (page=1) => {
         if (!Token) {
             throw new Error("No auth token found")
         }
@@ -145,6 +145,6 @@ const useInvoicesApi = () => {
         }
     };
 
-    return { showInvoice, updateInvoice, deleteInvoice, getInvoice ,addInvoice,bulkDeleteInvoices};
+    return { showInvoice, updateInvoice, deleteInvoice, getInvoices ,addInvoice,bulkDeleteInvoices};
 }
-export default useItemsApi;
+export default useInvoicesApi;

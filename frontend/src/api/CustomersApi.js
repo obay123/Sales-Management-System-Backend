@@ -12,8 +12,7 @@ const useCustomersApi = () => {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`,
-                    cache:'no-store'
+                    Authorization: `Bearer ${Token}`
                 },
                 body: JSON.stringify(customerData)
             });
