@@ -1,9 +1,9 @@
 
 
 
-const userApi  = async()=>{
+const userApi  = ()=>{
 
- const register = async (name, email, password) => {
+ const  register = async (name, email, password) => {
     try {
         const response = await fetch('/api/register', {
             method: 'POST',
@@ -27,12 +27,11 @@ const userApi  = async()=>{
             body: JSON.stringify({ email, password })
         });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Login failed');
+        if (!response.ok) throw new Error(data.message);
         localStorage.setItem('Token', data.token);
-        return data.message;
+        return data;
     } catch (error) {
-        console.error("Login Error:", error.message);
-        throw error;
+        throw error.message;
     }
 };
 
@@ -45,7 +44,7 @@ const userApi  = async()=>{
         const data = await response.json();
         if (!response.ok) throw new Error(data.message || "Logout failed");
         localStorage.clear();
-        return data.message ;
+        return data ;
     } catch (error) {
         console.error("Logout Error:", error.message);
         throw error;

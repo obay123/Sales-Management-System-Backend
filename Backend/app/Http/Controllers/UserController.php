@@ -35,7 +35,7 @@ class UserController extends Controller
         ]);
         if (!Auth::attempt($request->only('email', 'password')))
             return  response()->json(
-                ['message' => 'login failed'],
+                ['message' => 'Email or password is invalid !'],
                 401
             );
         $user = User::where('email', $request->email)->FirstOrFail();
