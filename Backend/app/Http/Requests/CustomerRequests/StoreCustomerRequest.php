@@ -17,6 +17,7 @@ class StoreCustomerRequest extends FormRequest
             'salesmen_code' => 'required|string|exists:salesmens,code',
             'tel1' => 'string|required|max:12',
             'tel2' => 'nullable|string|max:12',
+            'photo'=> 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address' => 'nullable|string',
             'gender' => 'required|string|in:male,female',
             'subscription_date' => 'nullable|date',

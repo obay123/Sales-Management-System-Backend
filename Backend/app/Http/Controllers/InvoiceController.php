@@ -92,7 +92,7 @@ class InvoiceController extends Controller
                 'total_price' => $totalPrice,
             ]);
         }
-        return response()->json(['message' => 'Invoices retrieved successfully', 'data' => $invoice->load('items')], 200);
+        return response()->json(['message' => 'Invoices updated successfully', 'data' => $invoice->load('items')], 200);
     }
 
     public function destroy(Invoice $invoice)

@@ -23,13 +23,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/export', [ItemController::class, 'exportItems']);
     Route::delete('/bulk-delete', [ItemController::class, 'bulkDelete']);
     });
-    Route::apiResource('items', ItemController::class);
 
     Route::prefix('invoices')->group(function () {
     Route::get('/export', [InvoiceController::class, 'exportInvoices']);
     Route::delete('/bulk-delete', [InvoiceController::class, 'bulkDelete']);
     });
-    Route::apiResource('invoices', InvoiceController::class);
 
     Route::prefix('customers')->group(function () {
         Route::get('/export', [CustomerController::class, 'exportCustomers']);
@@ -37,9 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('customers', CustomerController::class);
 
-    Route::prefix('salesmen')->group(function () {
+    Route::prefix('saleman')->group(function () {
+    Route::apiResource('', SalesmenController::class);
     Route::get('/export', [SalesmenController::class, 'exportSalesmen']);
-    Route::delete('/bulk-delete', [SalesmenController::class, 'bulkDelete']);
+    Route::delete('/bulk-delete', [CustomerController::class, 'bulkDelete']);
     });
-    Route::apiResource('salesmen', SalesmenController::class);
 });
