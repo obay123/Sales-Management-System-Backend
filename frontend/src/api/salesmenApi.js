@@ -128,7 +128,7 @@ const useSalesmenApi = () => {
         }
         try {
             const response = await fetch(`${API_URL}/bulk-delete`, {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${Token}`
