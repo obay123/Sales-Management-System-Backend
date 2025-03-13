@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import useInvoicesApi from "@/api/invoicesApi";
+import useInvoicesApi from "@/api/InvoicesApi";
 
 export default function Invoices() {
   const [invoices, setInvioces] = useState([]);

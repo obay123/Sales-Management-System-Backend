@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import useUserApi from "@/api/UserApi";
+import useUserApi from "@/api/userApi";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -22,19 +22,21 @@ export default function Register() {
 
   return (
     <div className="main-div">
-      <h2>
+        <form onSubmit={Register}>
         <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
 
         <input
-          type="text"
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
@@ -42,10 +44,11 @@ export default function Register() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
-        <button onClick={Register}>Register</button>
-      </h2>
+        <button type="submit">Register</button>
+        </form>
     </div>
   );
 }

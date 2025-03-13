@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import useSalesmensApi from "@/api/salesmenApi";
+import useSalesmenApi from "@/api/salesmenApi";
 
 export default function Salesmen() {
   const [Salesmen, setSalesmen] = useState([]);
@@ -9,7 +9,7 @@ export default function Salesmen() {
   useEffect(() => {
     const fetchSalesmen = async () => {
       try {
-        const { getSalesmen } = useSalesmensApi();
+        const { getSalesmen } = useSalesmenApi();
         const data = await getSalesmen();
         setSalesmen(data.salesmen.data);
       } catch (error) {

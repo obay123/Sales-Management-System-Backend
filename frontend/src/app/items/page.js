@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
-import useItemssApi from "@/api/ItemsApi";
+import useItemsApi from "@/api/ItemsApi";
 
 export default function Items() {
   const [items, setItems] = useState([]);
@@ -9,10 +9,9 @@ export default function Items() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const { getItems } = useItemssApi();
+        const { getItems } = useItemsApi();
         const data = await getItems();
         setItems(data.items.data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching items");
       }
@@ -20,8 +19,7 @@ export default function Items() {
     fetchItems();
   }, []);
 
-  console.log(items)
-  
+  console.log(items);
 
   return (
     <div className="main-div">
