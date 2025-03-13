@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import useSalesmenApi from "@/api/salesmenApi";
+import useSalesmenApi from "@/api/SalesmenApi";
 
 export default function Salesmen() {
   const [Salesmen, setSalesmen] = useState([]);

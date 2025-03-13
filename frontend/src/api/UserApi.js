@@ -31,18 +31,24 @@ const userApi = () => {
   };
 
   const logout = async () => {
+    const Token = localStorage.getItem("Token");
+    if (!Token) {
+      throw new Error("No auth token found");
+    }
     try {
       const response = await fetch("/api/logout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Token}`,
+        },
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Logout failed");
-      localStorage.clear();
+      if (!response.ok) throw new Error(data.message);
+      localStorage.removeItem("Token");
       return data;
     } catch (error) {
-      console.error("Logout Error:", error.message);
-      throw error;
+      throw error.message;
     }
   };
   return { logout, login, register };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import useUserApi from "@/api/userApi";
+import useUserApi from "@/api/UserApi";
 
 export default function Register() {
   const [name, setName] = useState("");
