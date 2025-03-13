@@ -10,13 +10,15 @@ export default function Invoices() {
       try {
         const { getInvoices } = useInvoicesApi();
         const data = await getInvoices();
-        setInvioces(data);
+        setInvioces(data.invoices.data);
+        
       } catch (error) {
         console.error("Error fetching invoices:", error);
       }
     };
     fetchInvoices();
   }, []);
+  console.log(invoices)
   return (
     <div className="main-div">
       <h1>invoices page</h1>

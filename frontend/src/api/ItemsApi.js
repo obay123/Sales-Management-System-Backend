@@ -42,12 +42,12 @@ const useItemsApi = () => {
             })
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to fetch items');
+                throw new Error(errorData.message || ' response error Failed to fetch items');
             }
             const data = await response.json()
             return data
         } catch (error) {
-            console.error("Error fetching item:", error.message);
+            console.error("Error fetching items");
             throw error
         }
     }

@@ -11,15 +11,17 @@ export default function Items() {
       try {
         const { getItems } = useItemssApi();
         const data = await getItems();
-        setItems(data);
+        setItems(data.items.data);
+        console.log(data);
       } catch (error) {
-        console.error("Error fetching items:", error);
+        console.error("Error fetching items");
       }
     };
     fetchItems();
   }, []);
 
-  console.log(items);
+  console.log(items)
+  
 
   return (
     <div className="main-div">

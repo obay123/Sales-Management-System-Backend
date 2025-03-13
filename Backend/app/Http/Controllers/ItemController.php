@@ -6,9 +6,12 @@ use App\Exports\Export;
 use App\Http\Requests\ItemRequest\StoreItemRequest;
 use App\Http\Requests\ItemRequest\UpdateItemRequest;
 use App\Models\Item;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+
+use function Laravel\Prompts\error;
 
 class ItemController extends Controller
 {
@@ -28,13 +31,13 @@ class ItemController extends Controller
 
     function index()
     {
-        $items = Auth::user()->items()->paginate(1);
+        $items = Auth::user()->items()->paginate(10);
         if ($items->isEmpty()) {
             return response()->json(['message' => 'no items found'], 200);
         }
         return response()->json([
             'message' => 'items retrieved successfully',
-            'data' => $items
+            'items' => $items
         ], 200);
     }
 
@@ -52,8 +55,8 @@ class ItemController extends Controller
         }
         $item->update($request->validated());
         return response()->json([
-            'message' => 'Updated successfully',
-            'data' => $item
+            'message' => 'Item Updated successfully',
+            'item' => $item
         ], 200);
     }
 
@@ -70,8 +73,8 @@ class ItemController extends Controller
             );
         }
         return response()->json([
-            'message' => 'item retrieved successfully',
-            'data' => $item
+            'message' => 'Item retrieved successfully',
+            'item' => $item
         ], 200);
     }
 

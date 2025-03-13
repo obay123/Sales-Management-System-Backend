@@ -11,7 +11,7 @@ export default function Customers() {
       try {
         const { getCustomers } = useCustomersApi();
         const data = await getCustomers();
-        setCustomers(data);
+        setCustomers(data.customers.data);
       } catch (error) {
         console.error("Error fetching customers:", error);
       }

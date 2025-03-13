@@ -15,7 +15,8 @@ class SalesmenController extends Controller
     public function index()
     {
         $salesmen = Auth::user()->salesmen()->paginate(20);
-        return response()->json(['message' => 'Salesman retrieved successfully', 'data' => $salesmen], 200);
+        return response()->json(['message' => 'Salesman retrieved successfully'
+        , 'salesmen' => $salesmen], 200);
     }
 
     public function store(StoreSalesmenRequest $request)
@@ -23,7 +24,8 @@ class SalesmenController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::user()->id;
         $salesman = Salesmen::create($data);
-        return response()->json(['message' => 'Salesman added successfully', 'data' => $salesman], 201);
+        return response()->json(['message' => 'Salesman added successfully'
+        , 'salesmen' => $salesman], 201);
     }
 
     public function show(Salesmen $salesman)
@@ -33,7 +35,7 @@ class SalesmenController extends Controller
         }
         return response()->json([
             'message' => 'retrieved successfully',
-            'data' => $salesman
+            'salesmen' => $salesman
         ], 200);
     }
 
@@ -43,7 +45,8 @@ class SalesmenController extends Controller
             return response()->json(["message" => "Unauthorized access"], 403);
         }
         $salesman->update($request->validated());
-        return response()->json(["message" => "Salesman updated successfully", 'data' => $salesman], 200);
+        return response()->json(["message" => "Salesman updated successfully"
+        , 'salesmen' => $salesman], 200);
     }
 
     public function destroy(Salesmen $salesman)

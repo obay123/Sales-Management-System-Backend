@@ -47,8 +47,8 @@ const useSalesmenApi = () => {
             const data = await response.json()
             return data
         } catch (error) {
-            console.error("Error fetching salesmen:", error.message);
-            throw error
+            console.error("Error while fetching salesmen",error);
+            throw error 
         }
     }
     const deleteSalesmen = async (id) => {

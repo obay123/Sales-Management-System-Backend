@@ -16,7 +16,8 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Auth::user()->customers()->paginate(20);
-        return response()->json(['message' => 'customers retrieved successfully', 'data' => $customers], 200);
+        return response()->json(['message' => 'customers retrieved successfully'
+        , 'customers' => $customers], 200);
     }
 
     public function store(StoreCustomerRequest $request)
@@ -39,7 +40,7 @@ class CustomerController extends Controller
         }
         return response()->json([
             'message' => 'retrieved successfully',
-            'data' => $customer
+            'customer' => $customer
         ], 200);
     }
 
@@ -49,7 +50,7 @@ class CustomerController extends Controller
             return response()->json(["message" => "Unauthorized access"], 403);
         }
         $customer->update($request->validated());
-        return response()->json(["message" => "Customer updated successfully", 'data' => $customer], 200);
+        return response()->json(["message" => "Customer updated successfully", 'customer' => $customer], 200);
     }
 
     public function destroy(Customer $customer)

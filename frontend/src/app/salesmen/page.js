@@ -11,7 +11,7 @@ export default function Salesmen() {
       try {
         const { getSalesmen } = useSalesmensApi();
         const data = await getSalesmen();
-        setSalesmen(data);
+        setSalesmen(data.salesmen.data);
       } catch (error) {
         console.error("Error fetching items:", error);
       }
