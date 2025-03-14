@@ -29,7 +29,7 @@ class ItemController extends Controller
     }
 
 
-    function index()
+    public function index()
     {
         $items = Auth::user()->items()->paginate(10);
         if ($items->isEmpty()) {

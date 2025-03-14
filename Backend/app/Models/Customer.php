@@ -9,6 +9,7 @@ class Customer extends Model
     protected $guarded=['id'];
     protected $table = 'customers';
     protected $primaryKey = 'id';
+    
 
     protected $casts = [
         'tags' => 'array', 

@@ -15,15 +15,15 @@ class StoreCustomerRequest extends FormRequest
         return [
             'name' => 'required|string|unique:customers,name',
             'salesmen_code' => 'required|string|exists:salesmens,code',
-            'tel1' => 'string|required|max:12',
+            'tel1' => 'string|nullable|max:12',
             'tel2' => 'nullable|string|max:12',
             'photo'=> 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address' => 'nullable|string',
-            'gender' => 'required|string|in:male,female',
+            'gender' => 'nullable|string|in:male,female',
             'subscription_date' => 'nullable|date',
-            'rate' => 'required|integer|max:5|min:1',
-            'tags' => 'required|array',
-            'tags.*' => 'string',
+            'rate' => 'nullable|integer|max:5|min:1',
+            'tags' => 'nullable|array',
+            'tags.*' => 'nullable|string',
         ];
     }
 }
