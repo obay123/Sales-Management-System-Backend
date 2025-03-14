@@ -18,13 +18,17 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         try {
-            $user_id = Auth::id();
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
             $validatedData = $request->validated();
-            $validatedData['user_id'] = $user_id;
+            $validatedData['user_id'] = $user->id;
             $item = Item::create($validatedData);
+            
             return response()->json($item, 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error adding item'], 500);
+            return response()->json(['message' => 'Error adding item', 'error' => $e->getMessage()], 500);
         }
     }
 
