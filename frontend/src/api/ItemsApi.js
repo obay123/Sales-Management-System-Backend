@@ -3,7 +3,7 @@ const API_URL = '/api/items'
 const useItemsApi = () => {
     const Token = localStorage.getItem('Token')
 
-    const addItem = async (code, name, description) => {
+    const addItem = async (item) => {
         if (!Token) {
             throw new Error("No auth token found");
         }
@@ -14,7 +14,7 @@ const useItemsApi = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${Token}`
                 },
-                body: JSON.stringify({ code, name, description })
+                body: JSON.stringify(item)
             })
             if (!response.ok) {
                 const errorData = await response.json();

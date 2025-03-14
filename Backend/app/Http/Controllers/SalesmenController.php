@@ -21,13 +21,21 @@ class SalesmenController extends Controller
 
     public function store(StoreSalesmenRequest $request)
     {
-        $data = $request->validated();
-        $data['user_id'] = Auth::user()->id;
-        $salesman = Salesmen::create($data);
-        return response()->json(['message' => 'Salesman added successfully'
-        , 'salesmen' => $salesman], 201);
+        try {
+            $data = $request->validated();
+            $data['user_id'] = Auth::user()->id;
+            $salesman = Salesmen::create($data);
+            return response()->json([
+                'message' => 'Salesman added successfully',
+                'salesman' => $salesman
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error adding salesman',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-
     public function show(Salesmen $salesman)
     {
         if ($salesman->user_id != Auth::user()->id) {

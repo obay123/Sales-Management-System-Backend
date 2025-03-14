@@ -8,26 +8,27 @@ const useSalesmenApi = () => {
             throw new Error("No auth token found");
         }
         try {
-            const response = await fetch(`${API_URL}`, {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${Token}`
                 },
-                body: JSON.stringify( salesmenData )
-            })
+                body: JSON.stringify(salesmenData)
+            });
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to add salesmen');
+                const errorData = await response.json(); 
+                console.error("Error response from server:", errorData.message);
+                throw new Error('Failed to add salesman');
             }
-            const data = await response.json()
-            return data
+            const data = await response.json(); 
+            return data;
+        } catch (error) {
+            console.error("Error adding salesman:", error.message);
+            throw error;
         }
-        catch (error) {
-            console.error("Error adding salesmen:", error.message);
-            throw error
-        }
-    }
+    };
+
     const getSalesmen = async (page=1) => {
         if (!Token) {
             throw new Error("No auth token found")
