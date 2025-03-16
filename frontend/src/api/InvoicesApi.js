@@ -12,7 +12,8 @@ const useInvoicesApi = () => {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`
+                    Authorization: `Bearer ${Token}`,
+                    Accept: "application/json",
                 },
                 body: JSON.stringify( invoiceData )
             })
@@ -37,7 +38,8 @@ const useInvoicesApi = () => {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`
+                    Authorization: `Bearer ${Token}`,
+                    Accept: "application/json"
                 },
             })
             if (!response.ok) {
@@ -60,7 +62,8 @@ const useInvoicesApi = () => {
                 method: 'DELETE',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`
+                    Authorization: `Bearer ${Token}`,
+                    Accept: "application/json"
                 },
             })
             if (!response.ok) {
@@ -83,7 +86,8 @@ const useInvoicesApi = () => {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`
+                    Authorization: `Bearer ${Token}`,
+                    Accept: "application/json",
                 },
                 body: JSON.stringify(updatedData)
             });
@@ -107,7 +111,8 @@ const useInvoicesApi = () => {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`
+                    Authorization: `Bearer ${Token}`,
+                    Accept: "application/json",
                 },
             })
             if (!response.ok) {
@@ -130,7 +135,8 @@ const useInvoicesApi = () => {
                 method: 'DELETE',
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Token}`
+                    Authorization: `Bearer ${Token}`,
+                 Accept: "application/json",
                 },
                 body: JSON.stringify({ ids })
             });
