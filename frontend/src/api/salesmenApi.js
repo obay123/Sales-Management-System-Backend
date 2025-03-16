@@ -20,8 +20,6 @@ const useSalesmenApi = () => {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        // console.error("Error response from server:", errorData.message);
-        // throw new Error('Failed to add salesman');
         throw new Error(errorData.message || "Failed to add salesman");
       }
       const data = await response.json();
