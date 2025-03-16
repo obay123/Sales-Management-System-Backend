@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('subscription_date');
             $table->unsignedTinyInteger('rate')->default(1)->comment('Rating from 1 to 5');
             $table->string('photo')->nullable();
-            $table->json('tags')->nullable(); 
+            $table->json('tag')->nullable(); 
             $table->timestamps();
         });
         

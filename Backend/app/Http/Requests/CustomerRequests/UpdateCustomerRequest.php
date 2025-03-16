@@ -21,8 +21,8 @@ class UpdateCustomerRequest extends FormRequest
             'gender' => 'sometimes|string|in:male,female',
             'subscription_date' => 'nullable|date',
             'rate' => 'sometimes|integer|max:5|min:1',
-            'tags' => 'sometimes|array',
-            'tags.*' => 'string'
+            'tag' => 'sometimes',
+            // 'tags.*' => 'string'
         ];
     }
 }

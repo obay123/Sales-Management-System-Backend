@@ -12,7 +12,7 @@ class Customer extends Model
     
 
     protected $casts = [
-        'tags' => 'array', 
+        // 'tags' => 'array', 
         'subscription_date' => 'date', 
     ];
 
