@@ -1,64 +1,90 @@
 const API_URL = "/api/customers";
 
 const useCustomersApi = () => {
-  const Token =
+  const getToken = () =>
     typeof window !== "undefined" ? localStorage.getItem("Token") : null;
+  const Token = getToken();
 
-  const addCustomer = async (
-    salesmen_code,
-    name,
-    tel1,
-    tel2,
-    address,
-    gender,
-    subscription_date,
-    rate,
-    photo,
-    tags
-  ) => {
+  // const addCustomer = async (
+  //   salesmen_code,
+  //   name,
+  //   tel1,
+  //   tel2,
+  //   address,
+  //   gender,
+  //   subscription_date,
+  //   rate,
+  //   photo,
+  //   tags
+  // ) => {
+  //   if (!Token) {
+  //     throw new Error("No auth token found");
+  //   }
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("salesmen_code", salesmen_code);
+  //     formData.append("name", name);
+  //     formData.append("tel1", tel1);
+  //     formData.append("tel2", tel2);
+  //     formData.append("address", address);
+  //     formData.append("gender", gender);
+  //     formData.append("subscription_date", subscription_date);
+  //     formData.append("rate", rate);
+
+  //     if (photo) {
+  //       formData.append("photo", photo); // ✅ Correct way to send files
+  //     }
+
+  //     if (Array.isArray(tags)) {
+  //       tags.forEach((tag) => {
+  //         formData.append("tags[]", tag); // ✅ Correct way to send array
+  //       });
+  //     }
+
+  //     const response = await fetch(API_URL, {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${Token}`, // ✅ No need for Content-Type
+  //       },
+  //       body: formData,
+  //     });
+
+  //     const textResponse = await response.text();
+  //     console.log("Raw API Response:", textResponse);
+
+  //     try {
+  //       const jsonResponse = JSON.parse(textResponse);
+  //       if (!response.ok)
+  //         throw new Error(jsonResponse.message || "Failed to add customer");
+  //       return jsonResponse;
+  //     } catch (error) {
+  //       throw new Error("Invalid JSON response from server");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding customer:", error.message);
+  //     throw error;
+  //   }
+  // };
+
+  const addCustomer = async (customerData) => {
     if (!Token) {
       throw new Error("No auth token found");
     }
     try {
-      const formData = new FormData();
-      formData.append("salesmen_code", salesmen_code);
-      formData.append("name", name);
-      formData.append("tel1", tel1);
-      formData.append("tel2", tel2);
-      formData.append("address", address);
-      formData.append("gender", gender);
-      formData.append("subscription_date", subscription_date);
-      formData.append("rate", rate);
-
-      if (photo) {
-        formData.append("photo", photo); // ✅ Correct way to send files
-      }
-
-      if (Array.isArray(tags)) {
-        tags.forEach((tag) => {
-          formData.append("tags[]", tag); // ✅ Correct way to send array
-        });
-      }
-
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${Token}`, // ✅ No need for Content-Type
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Token}`,
+          Accept: "application/json",
         },
-        body: formData,
+        body: JSON.stringify(customerData),
       });
-
-      const textResponse = await response.text();
-      console.log("Raw API Response:", textResponse);
-
-      try {
-        const jsonResponse = JSON.parse(textResponse);
-        if (!response.ok)
-          throw new Error(jsonResponse.message || "Failed to add customer");
-        return jsonResponse;
-      } catch (error) {
-        throw new Error("Invalid JSON response from server");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to add customer");
       }
+      return await response.json();
     } catch (error) {
       console.error("Error adding customer:", error.message);
       throw error;

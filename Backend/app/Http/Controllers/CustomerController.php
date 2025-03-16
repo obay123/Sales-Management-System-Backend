@@ -20,49 +20,49 @@ class CustomerController extends Controller
         , 'customers' => $customers], 200);
     }
 
-    // public function store(StoreCustomerRequest $request)
-    // {
-    //     $user_id = Auth::user()->id;
-    //     $validatedData = $request->validated();
-    //     $validatedData['user_id'] = $user_id;
-    //     if ($request->hasFile('photo')) {
-    //         $path = $request->file('photo')->store('customers photo', 'public');
-    //         $validatedData['photo'] = $path;
-    //     }
-    //     $customer = Customer::create($validatedData);
-    //     return response()->json(['message' => 'Customer added successfully', 'data' => $customer], 201);
-    // }
-
-
     public function store(StoreCustomerRequest $request)
-{
-    try {
-        $user_id = Auth::id(); // ✅ Simplified Auth check
+    {
+        $user_id = Auth::user()->id;
         $validatedData = $request->validated();
         $validatedData['user_id'] = $user_id;
-
-        // ✅ Ensure photo is handled correctly
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('customers_photos', 'public');
+            $path = $request->file('photo')->store('customers photo', 'public');
             $validatedData['photo'] = $path;
         }
-
         $customer = Customer::create($validatedData);
-
-        return response()->json([
-            'message' => 'Customer added successfully',
-            'data' => $customer
-        ], 201);
-    } catch (\Exception $e) {
-        // 🔴 Log the error for debugging
-        \Log::error("Customer store error: " . $e->getMessage());
-
-        return response()->json([
-            'error' => 'Something went wrong!',
-            'details' => $e->getMessage()
-        ], 500);
+        return response()->json(['message' => 'Customer added successfully', 'data' => $customer], 201);
     }
-}
+
+
+//     public function store(StoreCustomerRequest $request)
+// {
+//     try {
+//         $user_id = Auth::id(); // ✅ Simplified Auth check
+//         $validatedData = $request->validated();
+//         $validatedData['user_id'] = $user_id;
+
+//         // ✅ Ensure photo is handled correctly
+//         if ($request->hasFile('photo')) {
+//             $path = $request->file('photo')->store('customers_photos', 'public');
+//             $validatedData['photo'] = $path;
+//         }
+
+//         $customer = Customer::create($validatedData);
+
+//         return response()->json([
+//             'message' => 'Customer added successfully',
+//             'data' => $customer
+//         ], 201);
+//     } catch (\Exception $e) {
+//         // 🔴 Log the error for debugging
+//         \Log::error("Customer store error: " . $e->getMessage());
+
+//         return response()->json([
+//             'error' => 'Something went wrong!',
+//             'details' => $e->getMessage()
+//         ], 500);
+//     }
+// }
 
     public function show(Customer $customer)
     {

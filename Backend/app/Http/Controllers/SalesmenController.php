@@ -19,21 +19,38 @@ class SalesmenController extends Controller
         , 'salesmen' => $salesmen], 200);
     }
 
+    // public function store(StoreSalesmenRequest $request)
+    // {
+    //     try {
+    //         $data = $request->validated();
+    //         $data['user_id'] = Auth::user()->id;
+    //         $salesman = Salesmen::create($data);
+    //         return response()->json([
+    //             'message' => 'Salesman added successfully',
+    //             'salesman' => $salesman
+    //         ], 201);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Error adding salesman',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function store(StoreSalesmenRequest $request)
     {
         try {
-            $data = $request->validated();
-            $data['user_id'] = Auth::user()->id;
-            $salesman = Salesmen::create($data);
-            return response()->json([
-                'message' => 'Salesman added successfully',
-                'salesman' => $salesman
-            ], 201);
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+            $validatedData = $request->all(); // Use all() instead of validated()
+            $validatedData['user_id'] = $user->id;
+            $salesman = Salesmen::create($validatedData);
+            
+            return response()->json($salesman, 201);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error adding salesman',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Error adding salesman', 'error' => $e->getMessage()], 500);
         }
     }
     public function show(Salesmen $salesman)
