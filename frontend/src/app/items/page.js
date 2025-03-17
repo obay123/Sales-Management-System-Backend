@@ -26,14 +26,14 @@ export default function Items() {
     fetchItems();
   }, []);
 
-  const handleEditUser = (user) => {
-    toast.info(`Editing user: ${user.name}`, {
-      description: "You can modify the user details.",
-    });
-  };
-  // Handle delete user
-  const handleDeleteUser = (user) => {
-    toast.error(`Deleting user: ${user.name}`, {
+  // const handleEditItem = (items) => {
+  //   toast.info(`Editing user: ${items.name}`, {
+  //     description: "You can modify the user details.",
+  //   });
+  // };
+
+  const handleDeleteItem = (items) => {
+    toast.error(`Deleting user: ${items.name}`, {
       description: "This action cannot be undone.",
       action: {
         label: "Undo",
@@ -68,7 +68,7 @@ export default function Items() {
     {
       accessorKey: "code",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Came" />
+        <DataTableColumnHeader column={column} title="Code" />
       ),
       enableSorting: true,
     },
@@ -91,9 +91,9 @@ export default function Items() {
       cell: ({ row }) => (
         <DataTableRowActions
           row={row}
-          viewPath="/example/users"
-          onEdit={handleEditUser}
-          onDelete={handleDeleteUser}
+          // viewPath={`items/${row.original.code}`}
+          onEdit={`items/${row.original.code}`}
+          onDelete={handleDeleteItem}
         />
       ),
     },

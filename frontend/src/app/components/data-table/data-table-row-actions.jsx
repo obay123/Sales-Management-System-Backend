@@ -26,14 +26,14 @@ export function DataTableRowActions({ row, viewPath, onEdit, onDelete }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => router.push(`${viewPath}/${data.id}`)}>
+        <DropdownMenuItem onClick={() => router.push(`${viewPath}`)}>
           <Eye className="mr-2 h-4 w-4" />
           View
         </DropdownMenuItem>
         {onEdit && (
-          <DropdownMenuItem onClick={() => onEdit(data)}>
+          <DropdownMenuItem onClick={() => onEdit(data) }>
             <Edit className="mr-2 h-4 w-4" />
-            Edit
+            Edit 
           </DropdownMenuItem>
         )}
         {onDelete && (
