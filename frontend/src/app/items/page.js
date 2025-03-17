@@ -2,11 +2,16 @@
 
 import { useEffect, useState } from "react";
 import useItemsApi from "@/api/ItemsApi";
-import DataTable from "../components/data-table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataTable } from "../components/data-table/data-table";
+import { DataTableColumnHeader } from "../components/data-table/data-table-column-header";
+import { DataTableRowActions } from "../components/data-table/data-table-row-actions";
+import { toast } from "sonner";
+
+import "../globals.css";
 
 export default function Items() {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -15,34 +20,88 @@ export default function Items() {
         const data = await getItems();
         setItems(data.items.data);
       } catch (error) {
-        console.error("Error fetching items");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching items", error);
       }
     };
     fetchItems();
   }, []);
 
-  console.log(items);
+  const handleEditUser = (user) => {
+    toast.info(`Editing user: ${user.name}`, {
+      description: "You can modify the user details.",
+    });
+  };
+  // Handle delete user
+  const handleDeleteUser = (user) => {
+    toast.error(`Deleting user: ${user.name}`, {
+      description: "This action cannot be undone.",
+      action: {
+        label: "Undo",
+        onClick: () => console.log("Undo delete"),
+      },
+    });
+  };
+
+  const columns = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "code",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Came" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "description",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Description" />
+      ),
+      enableSorting: true,
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => (
+        <DataTableRowActions
+          row={row}
+          viewPath="/example/users"
+          onEdit={handleEditUser}
+          onDelete={handleDeleteUser}
+        />
+      ),
+    },
+  ];
 
   return (
-    <div className="main-div">
-      <h1>Items Page</h1>
-      <DataTable
-        title="Items List" // ✅ Still available if needed
-        data={items} // ✅ Pass pre-fetched data
-        loading={loading} // ✅ Pass loading state
-        columns={[
-          { key: "code", label: "Code", sortable: true },
-          { key: "name", label: "Item Name", sortable: true }, // "name" is the field, "Item Name" is UI label
-          { key: "description", label: "Description" }, // No sorting
-
-          // { key: "created_at", label: "Created At", sortable: true },
-          // { key: "updated_at", label: "Updated At", sortable: true },
-        ]}
-        viewRoute="/items/view"
-        editRoute="/items/edit"
-      />
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={items} filterColumn="name" />
     </div>
   );
 }
