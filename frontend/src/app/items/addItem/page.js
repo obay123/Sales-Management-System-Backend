@@ -1,7 +1,16 @@
 "use client";
-
+import '../../globals.css'
 import useItemsApi from "@/api/ItemsApi";
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 const AddItem = () => {
   const { addItem } = useItemsApi();
@@ -28,6 +37,19 @@ const AddItem = () => {
   };
 
   return (
+<>
+  <Card>
+  <CardHeader>
+    <CardTitle> Add Item</CardTitle>
+    {/* <CardDescription>Card Description</CardDescription> */}
+  </CardHeader>
+  <CardContent>
+    <p>Card Content</p>
+  </CardContent>
+  <CardFooter>
+  <Button variant="outline">Button</Button>
+  </CardFooter>
+</Card>
     <form onSubmit={handleAddItem}>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
@@ -63,6 +85,7 @@ const AddItem = () => {
         Add Item
       </button>
     </form>
+    </>
   );
 };
 

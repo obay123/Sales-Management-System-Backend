@@ -25,7 +25,7 @@ class ItemController extends Controller
             $validatedData = $request->validated();
             $validatedData['user_id'] = $user->id;
             $item = Item::create($validatedData);
-            
+
             return response()->json($item, 201);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error adding item', 'error' => $e->getMessage()], 500);
@@ -35,7 +35,7 @@ class ItemController extends Controller
 
     public function index()
     {
-        $items = Auth::user()->items()->paginate(10);
+        $items = Auth::user()->items()->paginate(50);
         if ($items->isEmpty()) {
             return response()->json(['message' => 'no items found'], 200);
         }
@@ -102,7 +102,7 @@ class ItemController extends Controller
             ->where('user_id', auth()->id())
             ->delete();
         return response()->json([
-            "message" => "$deletedCount customers deleted successfully"
+            "message" => "$deletedCount customers deleted successfull   y"
         ], 200);
     }
 
@@ -113,5 +113,16 @@ class ItemController extends Controller
         $headings = ["code", "Name", "Description", "Created At"];
 
         return Excel::download(new Export($query, $columns, $headings), 'items.xlsx');
+    }
+
+    public function getItemsCode(){
+        $items = Auth::user()->items->select('code','name');
+        if ($items->isEmpty()) {
+            return response()->json(['message' => 'no items found'], 200);
+        }
+        return response()->json([
+            'message' => 'items retrieved successfully',
+            'items' => $items
+        ], 200);
     }
 }
