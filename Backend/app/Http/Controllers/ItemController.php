@@ -98,7 +98,7 @@ class ItemController extends Controller
     public function bulkDelete(Request $request)
     {
         $ItemIds = $request->input('ids');
-        $deletedCount = Item::whereIn('id', $ItemIds)
+        $deletedCount = Item::whereIn('code', $ItemIds)
             ->where('user_id', auth()->id())
             ->delete();
         return response()->json([

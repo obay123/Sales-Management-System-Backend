@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('saleman')->group(function () {
     Route::get('/export', [SalesmenController::class, 'exportSalesmen']);
-    Route::delete('/bulk-delete', [CustomerController::class, 'bulkDelete']);
+    Route::delete('/bulk-delete', [SalesmenController::class, 'bulkDelete']);
     });
     Route::apiResource('salesmen', SalesmenController::class);
 });

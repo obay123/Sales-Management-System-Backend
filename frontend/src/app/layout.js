@@ -19,8 +19,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {/* <Toaster richColors position="top-right" /> */}
-
         <button onClick={handleLogout} className="cursor-pointer">Logout</button>
         {children}
       </body>

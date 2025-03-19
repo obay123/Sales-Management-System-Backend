@@ -86,7 +86,7 @@ class SalesmenController extends Controller
     public function bulkDelete(Request $request)
     {
         $ItemIds = $request->input('ids');
-        $deletedCount = Salesmen::whereIn('id', $ItemIds)
+        $deletedCount = Salesmen::whereIn('code', $ItemIds)
             ->where('user_id', auth()->id())
             ->delete();
         return response()->json([
