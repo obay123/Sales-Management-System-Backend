@@ -8,37 +8,45 @@ use App\Http\Requests\CustomerRequests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 
 class CustomerController extends Controller
 {
     public function index()
-    {
-        $customers = Auth::user()->customers()->paginate(20);
-        if ($customers->isEmpty()) {
-            return response()->json(['message' => 'no customer found'], 200);
-        }
-        return response()->json([
-            'message' => 'customers retrieved successfully'
-            ,
-            'customers' => $customers
-        ], 200);
+{
+    $customers = Auth::user()->customers()->paginate(20);
+
+    if ($customers->isEmpty()) {
+        return response()->json(['message' => 'no customer found'], 200);
     }
 
-    public function getCustomerNames()
+    // Transform each customer in the paginated collection to add the full photo_url.
+    $customers->getCollection()->transform(function ($customer) {
+        $customer->photo_url = $customer->photo ? url('storage/' . $customer->photo) : null;
+        return $customer;
+    });
+
+    return response()->json([
+        'message' => 'customers retrieved successfully',
+        'customers' => $customers
+    ], 200);
+}
+
+    public function show(Customer $customer)
     {
-        $customers = Auth::user()->customers->select('name', 'id');
-        if ($customers->isEmpty()) {
-            return response()->json(['message' => 'no customer found'], 200);
+        if ($customer->user_id != Auth::id()) {
+            return response()->json(["message" => "Unauthorized access"], 403);
         }
+        $customerData = $customer->toArray();
+        $customerData['photo_url'] = $customer->photo ? url('storage/' . $customer->photo) : null;
+
         return response()->json([
-            'message' => 'customers retrieved successfully'
-            ,
-            'customers' => $customers
+            'message' => 'Retrieved successfully',
+            'customer' => $customerData
         ], 200);
     }
-
     public function store(StoreCustomerRequest $request)
     {
         try {
@@ -53,9 +61,15 @@ class CustomerController extends Controller
 
             $customer = Customer::create($validatedData);
 
+            // Manually build full URL
+            $photo_url = $customer->photo ? url('storage/' . $customer->photo) : null;
+
             return response()->json([
                 'message' => 'Customer added successfully',
-                'data' => $customer
+                'data' => [
+                    ...$customer->toArray(),
+                    'photo_url' => $photo_url
+                ]
             ], 201);
         } catch (\Exception $e) {
             \Log::error("Customer store error: " . $e->getMessage());
@@ -67,16 +81,6 @@ class CustomerController extends Controller
         }
     }
 
-    public function show(Customer $customer)
-    {
-        if ($customer->user_id != Auth::user()->id) {
-            return response()->json(["message" => "Unauthorized access"], 403);
-        }
-        return response()->json([
-            'message' => 'retrieved successfully',
-            'customer' => $customer
-        ], 200);
-    }
 
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
@@ -114,6 +118,16 @@ class CustomerController extends Controller
         $headings = ["ID", "Name", "Salesmen Code", "Tel1", "Tel2", "Address", "Gender", "Subscription Date", "Rate", "Tags", "Created At"];
 
         return Excel::download(new Export($query, $columns, $headings), 'customers.xlsx');
-
+    }
+    public function getCustomerNames()
+    {
+        $customers = Auth::user()->customers->select('name', 'id');
+        if ($customers->isEmpty()) {
+            return response()->json(['message' => 'no customer found'], 200);
+        }
+        return response()->json([
+            'message' => 'customers retrieved successfully',
+            'customers' => $customers
+        ], 200);
     }
 }

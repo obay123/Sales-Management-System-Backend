@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Customer extends Model
 {
@@ -15,6 +16,19 @@ class Customer extends Model
         'tags' => 'array',
         'subscription_date' => 'date',
     ];
+
+    public function getSubscriptionDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d'); // Format as yy-mm-dd
+    }
+
+
+    protected $appends = ['photo_url'];
+    public function getPhotoUrlAttribute()
+{
+    return $this->photo ? url('storage/' . $this->photo) : null;
+}
+
 
     public function salesmen()
     {
