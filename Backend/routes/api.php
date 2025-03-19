@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('items')->group(function () {
     Route::get('/export', [ItemController::class, 'exportItems']);
     Route::delete('/bulk-delete', [ItemController::class, 'bulkDelete']);
+    Route::get('/names', [ItemController::class, 'getItemsCode']);
     });
     Route::apiResource('items', ItemController::class);
 
@@ -34,6 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('customers')->group(function () {
         Route::get('/export', [CustomerController::class, 'exportCustomers']);
         Route::delete('/bulk-delete', [CustomerController::class, 'bulkDelete']);
+        Route::get('/names', [CustomerController::class, 'getCustomerNames']);
+
     });
     Route::apiResource('customers', CustomerController::class);
 

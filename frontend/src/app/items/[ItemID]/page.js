@@ -4,9 +4,6 @@ import useItemsApi from "@/api/ItemsApi";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import "../../globals.css";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import DataViewer from "../../components/DataView";
 
 export default function ItemDetail() {
   const { ItemID } = useParams();
