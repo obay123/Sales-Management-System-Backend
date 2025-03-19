@@ -14,16 +14,16 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'salesmen_code' => 'required|string|exists:salesmens,code',
-            'name' => 'required|string|unique:customers,name',
+            'name' => 'required|string|unique:customers,name|max:255',
             'tel1' => 'required|string|max:12',
             'tel2' => 'nullable|string|max:12',
-            'address' => 'nullable|string',
-            'gender' => 'nullable|string|in:male,female',
-            'subscription_date' => 'nullable|date',
-            'rate' => 'nullable|integer|max:5|min:1',
+            'address' => 'nullable|string|max:255',
+            'gender' => 'required|in:male,female',
+            'subscription_date' => 'required|date',
+            'rate' => 'required|integer|max:5|min:1',
             'photo'=> 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'tag' => 'nullable',
-            // 'tags.*' => 'nullable|string',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:255',
         ];
     }
 }

@@ -9,11 +9,11 @@ class Customer extends Model
     protected $guarded=['id'];
     protected $table = 'customers';
     protected $primaryKey = 'id';
-    
+
 
     protected $casts = [
-        // 'tags' => 'array', 
-        'subscription_date' => 'date', 
+        'tags' => 'array',
+        'subscription_date' => 'date',
     ];
 
     public function salesmen()
