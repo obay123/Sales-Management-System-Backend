@@ -13,12 +13,12 @@ class UpdateItemRequest extends FormRequest
     {
         return true;
     }
-      
+
     public function rules(): array
     {
         return [
-            'code'=>'sometimes | unique:items,code| max:5',
-            'name'=>'sometimes | string',
+            'code'=>'sometimes|max:5',
+            'name'=>'unique:items,name|sometimes|string',
             'description'=>'sometimes | string | max:225 | nullable',
         ];
     }
