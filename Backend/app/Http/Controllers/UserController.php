@@ -16,14 +16,14 @@ class UserController extends Controller
             'email' => 'email|unique:users,email|string',
             'password' => 'string|required|max:225'
         ]);
-        $user =  User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password'])
         ]);
         return response()->json([
             'message' => 'Registration successful',
-            'user'=>$user
+            'user' => $user
         ], 201);
     }
 
@@ -34,13 +34,13 @@ class UserController extends Controller
             'password' => 'string|required'
         ]);
         if (!Auth::attempt($request->only('email', 'password')))
-            return  response()->json(
+            return response()->json(
                 ['message' => 'Email or password is invalid !'],
                 401
             );
         $user = User::where('email', $request->email)->FirstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
-        return  response()->json([
+        return response()->json([
             'message' => 'Login successful',
             'user' => $user,
             'token' => $token
@@ -52,6 +52,23 @@ class UserController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json([
             "message" => "logout successful"
+        ], 200);
+    }
+    public function getUserDetails(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated'
+            ], 401);
+        }
+
+        return response()->json([
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email
+            ]
         ], 200);
     }
 }
