@@ -28,7 +28,7 @@ class CustomerController extends Controller
 
     public function getCustomerNames()
     {
-        $customers = Auth::user()->customers->select('name','id');
+        $customers = Auth::user()->customers->select('name', 'id');
         if ($customers->isEmpty()) {
             return response()->json(['message' => 'no customer found'], 200);
         }
