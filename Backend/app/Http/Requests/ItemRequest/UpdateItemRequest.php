@@ -3,6 +3,7 @@
 namespace App\Http\Requests\ItemRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateItemRequest extends FormRequest
 {
@@ -17,10 +18,13 @@ class UpdateItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'=>'sometimes|max:5',
-            'name'=>'unique:items,name|sometimes|string',
-            'description'=>'sometimes | string | max:225 | nullable',
+            'code' => 'sometimes|max:5',
+            'name' => [
+                'sometimes',
+                'string',
+                Rule::unique('items', 'name')->ignore($this->route('item')->code, 'code'),
+            ],
+            'description' => 'sometimes | string | max:225 | nullable',
         ];
     }
-
 }

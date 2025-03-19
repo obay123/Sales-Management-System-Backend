@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SalesmenRequests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSalesmenRequest extends FormRequest
@@ -14,11 +15,15 @@ class UpdateSalesmenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'=>'unique:salesmens,code|sometimes|string|max:10',
-            'name'=>'sometimes|string',
-            'phone'=>'sometimes|max:12|string',
-            'address'=>'sometimes|nullable|string|max:225',
-            'is_inactive'=>'sometimes'|'boolean'
+            'code' => 'sometimes|string|max:10',
+            'name' => [
+                'sometimes',
+                'string',
+                Rule::unique('salesmens', 'name')->ignore($this->route('salesman')->code, 'code'),
+            ],
+            'phone' => 'sometimes|string|max:12',
+            'address' => 'sometimes|nullable|string|max:225',
+            'is_inactive' => 'sometimes|boolean',
         ];
     }
 }
