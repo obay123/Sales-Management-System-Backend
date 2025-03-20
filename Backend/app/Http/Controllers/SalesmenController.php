@@ -84,19 +84,18 @@ class SalesmenController extends Controller
 
         return Excel::download(new Export($query, $columns, $headings), 'salesmen.xlsx');
     }
+    public function getSalesmenName()
+    {
+        $salesmen = Auth::user()->salesmen()->select('code', 'name')->get();
 
+        if ($salesmen->isEmpty()) {
+            return response()->json(['message' => 'no salesmen found'], 200);
+        }
 
-    // public function getCustomers(Salesmen $salesman)
-    // {
-    //     if ($salesman->user_id != Auth::user()->id) {
-    //         return response()->json(["message" => "Unauthorized access"], 403);
-    //     }
-    //     $customers = $salesman->customers;
+        return response()->json([
+            'message' => 'salesmen retrieved successfully',
+            'salesmen' => $salesmen
+        ], 200);
+    }
 
-    //     if ($customers->isEmpty()) {
-    //         return response()->json(["message" =>
-    //          "No customers found for this salesman"], 200);
-    //     }
-    //     return response()->json($customers, 200);
-    // }
 }
