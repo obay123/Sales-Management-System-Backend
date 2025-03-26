@@ -15,8 +15,11 @@ class InvoiceController extends Controller
     public function index()
     {
         $invoices = Auth::user()->invoices()->with('items')->paginate(20);
-        return response()->json(['message' => 'Invoices retrieved successfully'
-        , 'invoices' => $invoices], 200);
+        return response()->json([
+            'message' => 'Invoices retrieved successfully'
+            ,
+            'invoices' => $invoices
+        ], 200);
     }
 
     public function store(StoreInvoiceRequest $request)
@@ -47,8 +50,11 @@ class InvoiceController extends Controller
             ];
         }
         $invoice->items()->attach($itemsToAttach);
-        return response()->json(['message' => ' invoice Added successfully'
-        , 'invoice' => $invoice->load('items')], 201);
+        return response()->json([
+            'message' => ' invoice Added successfully'
+            ,
+            'invoice' => $invoice->load('items')
+        ], 201);
     }
 
     public function show(Invoice $invoice)
@@ -56,8 +62,11 @@ class InvoiceController extends Controller
         if ($invoice->user_id != Auth::user()->id) {
             return response()->json(["message" => "Unauthorized access"], 403);
         }
-        return response()->json(['message' => 'Invoices retrieved successfully'
-        , 'invoice' => $invoice->load('items')], 200);
+        return response()->json([
+            'message' => 'Invoices retrieved successfully'
+            ,
+            'invoice' => $invoice->load('items')
+        ], 200);
     }
 
     public function update(UpdateInvoiceRequest $request, Invoice $invoice)
@@ -95,8 +104,11 @@ class InvoiceController extends Controller
                 'total_price' => $totalPrice,
             ]);
         }
-        return response()->json(['message' => 'invoice updated successfully'
-        , 'invoice' => $invoice->load('items')], 200);
+        return response()->json([
+            'message' => 'invoice updated successfully'
+            ,
+            'invoice' => $invoice->load('items')
+        ], 200);
     }
 
     public function destroy(Invoice $invoice)
