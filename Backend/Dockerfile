@@ -1,33 +1,34 @@
-# Stage 1: Composer Build
-FROM composer:2 AS builder
+# Stage 1: Build with Composer and PHP 8.2
+FROM php:8.2-cli AS builder
 
-# Use PHP 8.2 instead of the default 8.1 in the composer image
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git unzip zip curl libzip-dev libonig-dev libxml2-dev \
     && docker-php-ext-install pdo mbstring zip
 
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 WORKDIR /app
 
+# Copy and install dependencies
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
 
+# Copy the rest of the app
 COPY . .
 
-# Stage 2: Runtime Environment
+# Stage 2: Runtime environment with PHP 8.2
 FROM php:8.2-cli
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    git unzip zip curl libzip-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    git \
-    curl
-
-RUN docker-php-ext-install pdo_mysql mbstring zip
-
+# Copy built app from builder
 COPY --from=builder /app /app
 
 EXPOSE 8000
