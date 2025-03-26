@@ -11,12 +11,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 WORKDIR /app
 
-# Copy and install dependencies
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
-
-# Copy the rest of the app
+# ✅ Copy full app source including artisan before running Composer
 COPY . .
+
+# Install PHP dependencies (without dev packages)
+RUN composer install --no-dev --optimize-autoloader
 
 # Stage 2: Runtime environment with PHP 8.2
 FROM php:8.2-cli
@@ -28,10 +27,12 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Copy built app from builder stage
 COPY --from=builder /app /app
 
 EXPOSE 8000
 
+# Cache config, routes, and serve the app
 CMD php artisan config:cache && \
     php artisan route:cache && \
     php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
