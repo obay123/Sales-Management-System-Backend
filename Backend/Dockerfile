@@ -1,39 +1,37 @@
 # Stage 1: Composer Build
-FROM composer:2 as builder
+FROM composer:2 AS builder
+
+# Use PHP 8.2 instead of the default 8.1 in the composer image
+RUN apt-get update && apt-get install -y \
+    git unzip zip curl libzip-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo mbstring zip
 
 WORKDIR /app
 
-# Copy only composer files and install dependencies
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy the rest of the application
 COPY . .
 
-# Stage 2: Laravel Runtime
-FROM php:8.1-cli
+# Stage 2: Runtime Environment
+FROM php:8.2-cli
 
 WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
     unzip \
     git \
-    curl \
-    && docker-php-ext-install pdo_mysql mbstring
+    curl
 
-# Copy Laravel app from builder
+RUN docker-php-ext-install pdo_mysql mbstring zip
+
 COPY --from=builder /app /app
 
-# Copy entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Expose Railway-compatible port
 EXPOSE 8000
 
-# Start using entrypoint
-CMD ["/entrypoint.sh"]
+CMD php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
