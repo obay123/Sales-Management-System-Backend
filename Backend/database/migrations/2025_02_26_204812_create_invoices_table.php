@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
 
     public function up(): void
     {
@@ -16,13 +15,13 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->integer('total_quantity');
             $table->decimal('total_price', 10, 2);
-            $table->date('date')->default(DB::raw('CURRENT_DATE'));
+            $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
 
             $table->foreign('customer_id')
-                  ->references('id')
-                  ->on('customers')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('customers')
+                ->onDelete('cascade');
         });
     }
 

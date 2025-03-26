@@ -25,7 +25,7 @@ class UpdateCustomerRequest extends FormRequest
             'gender' => 'sometimes|in:male,female',
             'subscription_date' => 'sometimes|date',
             'rate' => 'sometimes|integer|min:1|max:5',
-            'photo' => 'nullable|string|max:255',
+            'photo' => 'sometimes|string|max:255',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:255',
         ];
