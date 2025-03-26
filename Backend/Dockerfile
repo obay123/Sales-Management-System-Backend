@@ -10,7 +10,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Copy the rest of the application
 COPY . .
 
-# Stage 2: Runtime Environment
+# Stage 2: Laravel Runtime
 FROM php:8.1-cli
 
 WORKDIR /app
@@ -22,18 +22,18 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    curl
+    curl \
+    && docker-php-ext-install pdo_mysql mbstring
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring
-
-# Copy application from builder
+# Copy Laravel app from builder
 COPY --from=builder /app /app
+
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Expose Railway-compatible port
 EXPOSE 8000
 
-# Run Laravel commands at runtime
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+# Start using entrypoint
+CMD ["/entrypoint.sh"]
